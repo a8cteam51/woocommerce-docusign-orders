@@ -28,7 +28,8 @@
   ],
   "require": {
     "php": ">=7.4",
-    "ext-json": "*"
+    "ext-json": "*",
+    "docusign/esign-client": "^6.18"
   },
   "require-dev": {
     "a8cteam51/team51-configs": "dev-trunk",
