@@ -14,16 +14,16 @@
  * Plugin URI:              https://wpspecialprojects.wordpress.com
  * Description:
  * Version:                 1.0.0
- * Requires at least:       6.2
- * Tested up to:            6.2
- * Requires PHP:            8.0
+ * Requires at least:       5.9
+ * Tested up to:            6.4
+ * Requires PHP:            7.4
  * Author:                  WordPress.com Special Projects
  * Author URI:              https://wpspecialprojects.wordpress.com
  * License:                 GPL v3 or later
  * License URI:             https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:             wpcomsp-woocommerce-docusign-orders
  * Domain Path:             /languages
- * WC requires at least:    7.4
+ * WC requires at least:    5.9
  * WC tested up to:         7.4
  **/
 

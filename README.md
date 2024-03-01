@@ -1,10 +1,10 @@
-# woocommerce-docusign-orders
+# DocuSign WooCommerce Orders
 
 **Contributors:** wpcomspecialprojects \
 **Tags:** \
-**Requires at least:** 6.2 \
-**Tested up to:** 6.2 \
-**Requires PHP:** 8.0 \
+**Requires at least:** 5.9 \
+**Tested up to:** 6.4 \
+**Requires PHP:** 7.4 \
 **Stable tag:** 1.0.0   \
 **License:** GPLv3 or later \
 **License URI:** http://www.gnu.org/licenses/gpl-3.0.html
@@ -13,15 +13,15 @@
 
 ## Description
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed leo ligula, aliquam et sem luctus, placerat facilisis orci. Cras faucibus, odio ac aliquet scelerisque, nisi ligula dignissim nisi, sed tincidunt magna libero vitae dui. Sed varius lectus turpis, fringilla maximus libero posuere nec. Aenean volutpat pharetra sem, et cursus leo sodales quis.
+Allows for signing of DocuSign documents as part of the order process in WooCommerce.
 
 ## Installation
 
-This plugin requires WooCommerce 7.4+ to run. If you're running a lower version, please update first. After you made sure that you're running a supported version of WooCommerce, you may install `DocuSign WooCommerce Orders` either manually or through your site's plugins page.
+This plugin requires WooCommerce 5.9+ to run. If you're running a lower version, please update first. After you made sure that you're running a supported version of WooCommerce, you may install `DocuSign WooCommerce Orders` either manually or through your site's plugins page.
 
 ### INSTALL FROM WITHIN WORDPRESS
 
-1. Visit the plugins page withing your dashboard and select `Add New`.
+1. Visit the plugins page within your dashboard and select `Add New`.
 1. Search for `DocuSign WooCommerce Orders` and click the `Install Now` button.
 1. Activate the plugin from within your `Plugins` page.
 
@@ -33,17 +33,17 @@ This plugin requires WooCommerce 7.4+ to run. If you're running a lower version,
 
 ### AFTER ACTIVATION
 
-If the minimum required version of WooCommerce is present, you will find a section present in the `Advanced` tab of the WooCommerce `Settings` page. Aliquam dolor sem, convallis malesuada neque sit amet, dictum mattis velit. Vestibulum at pharetra metus. Suspendisse rhoncus libero nisi, sed rhoncus tortor aliquam pretium.
+If the minimum required version of WooCommerce is present, you will find a `DocuSign` section present in the `Advanced` tab of the WooCommerce `Settings` page. 
 
 ## Frequently Asked Questions
 
 ### How can I get help if I'm stuck?
 
-Quisque volutpat tortor id varius pulvinar. Vivamus porttitor, mi non auctor pellentesque, leo purus interdum libero, at aliquam justo lectus sed ligula.
+Feel free to open an issue on [our GitHub repo](https://github.com/a8cteam51/woocommerce-docusign-orders).
 
 ### I have a question that is not listed here
 
-Duis efficitur, sapien ac scelerisque placerat, elit justo tempor nisl, ut feugiat magna orci quis odio.
+See "How can I get help if I'm stuck?", above.
 
 ## Screenshots
 
