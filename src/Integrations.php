@@ -1,8 +1,8 @@
 <?php
 
-namespace WPCOMSpecialProjects\Scaffold;
+namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders;
 
-use WPCOMSpecialProjects\Scaffold\Integrations\WC_Subscriptions;
+use WPCOMSpecialProjects\DocuSignWooCommerceOrders\Integrations\WC_Subscriptions;
 
 defined( 'ABSPATH' ) || exit;
 

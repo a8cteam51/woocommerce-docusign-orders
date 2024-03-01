@@ -34,7 +34,7 @@ export default function Edit() {
 		<p { ...useBlockProps() }>
 			{ __(
 				'Todo List – hello from the editor!',
-				'wpcomsp-scaffold'
+				'wpcomsp-woocommerce-docusign-orders'
 			) }
 		</p>
 	);

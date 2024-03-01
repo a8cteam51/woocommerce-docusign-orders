@@ -1,6 +1,6 @@
 <?php
 
-namespace WPCOMSpecialProjects\Scaffold\Integrations;
+namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders\Integrations;
 
 defined( 'ABSPATH' ) || exit;
 
