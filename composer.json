@@ -71,7 +71,7 @@
       "@makejson"
     ],
     "makepot": "wp i18n make-pot .",
-    "updatepo": "wp i18n update-po ./languages/wpcomsp-woocommerce-docusign-orders.pot",
+    "updatepo": "wp i18n update-po ./languages/woocommerce-docusign-orders.pot",
     "makejson": "wp i18n make-json ./languages --pretty-print --no-purge",
     "makemo": "wp i18n make-mo ./languages",
 
