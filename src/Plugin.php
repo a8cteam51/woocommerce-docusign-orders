@@ -14,16 +14,6 @@ class Plugin {
 	// region FIELDS AND CONSTANTS
 
 	/**
-	 * The blocks component.
-	 *
-	 * @since   1.0.0
-	 * @version 1.0.0
-	 *
-	 * @var     Blocks|null
-	 */
-	public ?Blocks $blocks = null;
-
-	/**
 	 * The integrations component.
 	 *
 	 * @since   1.0.0
@@ -139,9 +129,6 @@ class Plugin {
 	 * @return  void
 	 */
 	protected function initialize(): void {
-		$this->blocks = new Blocks();
-		$this->blocks->initialize();
-
 		$this->integrations = new Integrations();
 		$this->integrations->initialize();
 	}
