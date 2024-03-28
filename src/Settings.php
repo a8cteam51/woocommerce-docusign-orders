@@ -356,24 +356,10 @@ class Settings {
 	 * @return array
 	 */
 	public function sanitize_settings( array $settings ) : array {
-		$scan_frequency = $this->get_scan_frequency_options();
-
-		$settings['media_buffer']     = absint( $settings['media_buffer'] );
-		$settings['posts_buffer']     = absint( $settings['posts_buffer'] );
-		$settings['deletion_buffer']  = absint( $settings['deletion_buffer'] );
-		$settings['analysis_buffer']  = absint( $settings['analysis_buffer'] );
-		$settings['delay']            = absint( $settings['delay'] );
+		$settings['integration_key'] = sanitize_text_field( $settings['integration_key'] );
+		$settings['secret_key']      = sanitize_text_field( $settings['secret_key'] );
+		$settings['authorization_code'] = sanitize_text_field( $settings['authorization_code'] );
 		$settings['enable_logging']   = absint( $settings['enable_logging'] );
-		$settings['empty_trash_days'] = absint( $settings['empty_trash_days'] );
-		$settings['skip_trash']       = absint( $settings['skip_trash'] );
-
-		if ( ! array_key_exists( $settings['scan_frequency'], $scan_frequency ) ) {
-			$settings['scan_frequency'] = 'never';
-		}
-
-		if ( 0 === $settings['empty_trash_days'] ) {
-			$settings['empty_trash_days'] = 1;
-		}
 
 		return $settings;
 	}
@@ -395,23 +381,5 @@ class Settings {
 		);
 
 		update_option( $this->slug . '-settings', $defaults );
-	}
-
-	/**
-	 * Returns the options for the scan frequency setting.
-	 *
-	 * @return array
-	 */
-	private function get_scan_frequency_options() : array {
-		return apply_filters(
-			'wpcomsp_dwo_scan_frequency',
-			array(
-				'never'         => __( 'Never', 'wpcomsp-woocommerce-docusign-orders' ),
-				'daily'         => __( 'Daily', 'wpcomsp-woocommerce-docusign-orders' ),
-				'weekly'        => __( 'Weekly', 'wpcomsp-woocommerce-docusign-orders' ),
-				'twice_monthly' => __( 'Twice Monthly', 'wpcomsp-woocommerce-docusign-orders' ),
-				'monthly'       => __( 'Monthly', 'wpcomsp-woocommerce-docusign-orders' ),
-			)
-		);
 	}
 }
