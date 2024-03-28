@@ -35,6 +35,7 @@ function wpcomsp_dwo_get_plugin_slug(): string {
 //region OTHERS
 
 require WPCOMSP_DWO_PATH . 'includes/assets.php';
+require WPCOMSP_DWO_PATH . 'includes/database.php';
 require WPCOMSP_DWO_PATH . 'includes/settings.php';
 
 // endregion
