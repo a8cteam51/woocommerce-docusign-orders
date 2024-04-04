@@ -23,6 +23,26 @@ class Plugin {
 	 */
 	public ?Integrations $integrations = null;
 
+	/**
+	 * Embedded DocuSign signatures component.
+	 *
+	 * @since   1.0.0
+	 * @version 1.0.0
+	 *
+	 * @var     Embedded_DocuSign|null
+	 */
+	public ?Embedded_DocuSign $docusign = null;
+
+	/**
+	 * Settings.
+	 *
+	 * @since 1.0.0
+	 * @version
+	 *
+	 * @var Settings|null
+	 */
+	public ?Settings $settings = null;
+
 	// endregion
 
 	// region MAGIC METHODS
@@ -131,6 +151,13 @@ class Plugin {
 	protected function initialize(): void {
 		$this->integrations = new Integrations();
 		$this->integrations->initialize();
+
+		$this->settings = new Settings();
+		$this->settings->initialize();
+
+		$this->docusign = new Embedded_DocuSign();
+
+		$this->maybe_install();
 	}
 
 	// endregion
@@ -175,6 +202,60 @@ class Plugin {
 		}
 
 		$this->initialize();
+	}
+
+		/**
+	 * Setups up the custom table and default options the first time the plugin is installed.
+	 *
+	 * @since 1.0.0
+	 * @version 1.0.0
+	 *
+	 * @return void
+	 */
+	public function maybe_install(): void {
+		$installed_plugin_version = $this->get_installed_plugin_version();
+		$installed_schema_version = $this->get_installed_schema_version();
+
+		// Check that installed plugin version isn't 0. If it is, it's not installed.
+		if ( version_compare( $installed_plugin_version, '0', '==' ) ) {
+			$this->settings->set_default_settings();
+		}
+
+		// Check that installed schema version isn't 0. If it is, the table hasn't been created.
+		if ( version_compare( $installed_schema_version, '0', '==' ) ) {
+			wpcomsp_dwo_create_table();
+		}
+
+		// Installation is complete. Set the installed version.
+		update_option( 'wpcomsp_dwo_plugin_version', WPCOMSP_DWO_METADATA['Version'] );
+		update_option( 'wpcomsp_dwo_schema_version', wpcomsp_dwo_get_schema_version() );
+	}
+
+	/**
+	 * Returns the installed version of the plugin.
+	 *
+	 * The plugin_version option gets set after the plugin is fully installed.
+	 *
+	 * @since 1.0.0
+	 * @version 1.0.0
+	 *
+	 * @return string The installed version of the plugin or '0' if it hasn't been installed before.
+	 */
+	public function get_installed_plugin_version(): string {
+		$installed_version = get_option( 'wpcomsp_dwo_plugin_version' );
+
+		return ! empty( $installed_version ) ? $installed_version : '0';
+	}
+
+	/**
+	 * Returns the installed schema version of the database.
+	 *
+	 * @return string
+	 */
+	public function get_installed_schema_version(): string {
+		$installed_schema = get_option( 'wpcomsp_dwo_schema_version' );
+
+		return ! empty( $installed_schema ) ? $installed_schema : '0';
 	}
 
 	// endregion
