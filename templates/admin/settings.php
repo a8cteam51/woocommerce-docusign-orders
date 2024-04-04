@@ -9,11 +9,7 @@
  * If we've been redirected from OAuth, capture the returned code.
  */
 
-// phpcs:disable WordPress.Security.NonceVerification.Recommended -- This is a redirect from DocuSign. We can't send the nonce through.
-if ( isset( $_GET['code'] ) ) {
-	wpcomsp_dwo_update_settings_data( 'authorization_code', sanitize_text_field( wp_unslash( $_GET['code'] ) ) );
-}
-// phpcs:enable WordPress.Security.NonceVerification.Recommended
+wpcomsp_dwo_maybe_update_oauth_code();
 
 ?>
 
