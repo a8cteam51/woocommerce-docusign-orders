@@ -300,7 +300,7 @@ class Settings {
 	 *
 	 * @return mixed
 	 */
-	public function get_settings_data( string $key = '' ): mixed {
+	public function get_settings_data( string $key = '' ) {
 		$settings = get_option( $this->slug . '-settings' );
 
 		if ( ! empty( $key ) ) {
