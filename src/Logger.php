@@ -55,7 +55,7 @@ final class Logger {
 	 */
 	public static function log( string $message ): void {
 		if ( wpcomsp_dwo_get_settings_data( 'enable_logging' ) ) {
-			error_log( 'Log from ' . WPCOMSP_DWO_METADATA['Name'] . ":\n{$message}" );
+			error_log( 'Log from ' . WPCOMSP_DWO_METADATA['Name'] . ":\n{$message}" ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug log when set.
 		}
 	}
 

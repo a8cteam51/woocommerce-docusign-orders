@@ -1,15 +1,35 @@
 <?php
 
+/**
+ * Settings class.
+ *
+ * @package WPCOMSpecialProjects\DocuSignWooCommerceOrders
+ */
+
 namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders;
 
 defined( 'ABSPATH' ) || exit; // @phpstan-ignore-line
 
+/**
+ * Main Settings class.
+ *
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 class Settings {
 
 	private string $slug;
 
 	private array $fields;
 
+	/**
+	 * Settings constructor.
+	 *
+	 * @since 1.0.0
+	 * @version 1.0.0
+	 *
+	 * @return void
+	 */
 	public function __construct() {
 		$this->slug   = wpcomsp_dwo_get_plugin_slug();
 		$this->fields = $this->get_settings_fields();
@@ -20,6 +40,8 @@ class Settings {
 	 *
 	 * @since  1.0.0
 	 * @version 1.0.0
+	 *
+	 * @return void
 	 */
 	public function initialize(): void {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
@@ -92,7 +114,8 @@ class Settings {
 	/**
 	 * Renders the fields
 	 *
-	 * @param $args
+	 * @param array $args The field arguments.
+	 *
 	 * @since 1.0.0
 	 * @version 1.0.0
 	 *
@@ -270,7 +293,8 @@ class Settings {
 	/**
 	 * Returns saved settings data.
 	 *
-	 * @param $key string The settings key to return data for.
+	 * @param string $key The settings key to return data for.
+	 *
 	 * @since 1.0.0
 	 * @version 1.0.0
 	 *
@@ -289,8 +313,9 @@ class Settings {
 	/**
 	 * Updates the settings data for a specific key.
 	 *
-	 * @param $key   string The settings key to update.
-	 * @param $value mixed  The value to set.
+	 * @param string $key   The settings key to update.
+	 * @param mixed  $value The value to set.
+	 *
 	 * @since  1.0.0
 	 * @version 1.0.0
 	 *

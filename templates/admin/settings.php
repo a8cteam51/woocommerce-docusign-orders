@@ -8,7 +8,7 @@
 ?>
 
 <div class="wrap">
-	<h2><?php _e( 'DocuSign WooCommerce Orders', 'wpcomsp-woocommerce-docusign-orders' ); ?></h2>
+	<h2><?php esc_html_e( 'DocuSign WooCommerce Orders', 'wpcomsp-woocommerce-docusign-orders' ); ?></h2>
 
 	<form method="post" action="options.php">
 		<?php

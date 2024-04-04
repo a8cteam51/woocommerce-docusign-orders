@@ -20,6 +20,8 @@ function wpcomsp_dwo_get_schema_version(): string {
  * Creates the custom table.
  *
  * This is called when the plugin is activated for the first time.
+ *
+ * @return void
  */
 function wpcomsp_dwo_create_table(): void {
 	// global $wpdb;
@@ -38,6 +40,8 @@ function wpcomsp_dwo_create_table(): void {
  * Resets the table.
  *
  * This is used before a new scan is started.
+ *
+ * @return void
  */
 function wpcomsp_dwo_reset_table(): void {
 	// global $wpdb;
