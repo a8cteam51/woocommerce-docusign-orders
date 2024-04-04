@@ -1,8 +1,15 @@
 <?php
 
-namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders\Models;
+/**
+ * Embedded DocuSign handler class.
+ *
+ * @package WPcomSpecialProjects\DocuSignWooCommerceOrders
+ */
+
+namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders;
 
 defined( 'ABSPATH' ) || exit;
+
 
 /**
  * Implements DocuSign process for embedded signatures.
@@ -26,7 +33,7 @@ class Embedded_DocuSign {
 	 * @return string The integration key. Empty if not available.
 	 */
 	public static function get_integration_key() {
-		return get_option( 'docusign_integration_key', '' );
+		return wpcomsp_dwo_get_settings_data( 'integration_key' );
 	}
 
 	/**
@@ -36,7 +43,7 @@ class Embedded_DocuSign {
 	 * @return string The secret key. Empty if not available.
 	 */
 	public static function get_secret_key() {
-		return get_option( 'docusign_secret_key', '' );
+		return wpcomsp_dwo_get_settings_data( 'secret_key' );
 	}
 
 	/**
@@ -45,7 +52,7 @@ class Embedded_DocuSign {
 	 * @return string The authorization code. Empty if not available.
 	 */
 	public static function get_authorization_code() {
-		$authorization_code = get_option( 'docusign_authorization_code', '' );
+		$authorization_code = wpcomsp_dwo_get_settings_data( 'authorization_code' );
 
 		return $authorization_code;
 	}
@@ -67,7 +74,7 @@ class Embedded_DocuSign {
 				'response_type' => 'code',
 				'scope'         => 'signature',
 				'client_id'     => self::get_integration_key(),
-				'redirect_uri'  => rawurlencode( admin_url( '/admin.php?page=viewlife_docusign' ) ),
+				'redirect_uri'  => rawurlencode( admin_url( '/options-general.php?page=wpcomsp_woocommerce_docusign_settings' ) ),
 			),
 			$base_url
 		);

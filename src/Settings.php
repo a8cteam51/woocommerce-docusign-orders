@@ -269,7 +269,7 @@ class Settings {
 						id="' . esc_attr( $args['id'] ) . '"
 						name="' . esc_attr( $args['name'] ) . '"
 						size="' . esc_attr( $args['size'] ?? 30 ) . '"
-						value="' . esc_attr( $wp_data_value ) . '"
+						value="' . ( $wp_data_value ? esc_attr( $wp_data_value ) : 'Not Set' ) . '"
 						readonly>'
 						. '<p class="description">' . wp_kses_post( $args['description'] ) . '</p>',
 					array(
@@ -346,7 +346,7 @@ class Settings {
 				'id'          => $this->slug . '-settings[integration_key]',
 				'name'        => $this->slug . '-settings[integration_key]',
 				'size'        => 40,
-				'description' => __( 'The integration key provided by DocuSign', 'wpcomsp-woocommerce-docusign-orders' ),
+				'description' => __( 'The integration key provided by DocuSign. (Integrations > Apps and Keys)', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
 				'label'       => __( 'Secret Key', 'wpcomsp-woocommerce-docusign-orders' ),
@@ -355,7 +355,7 @@ class Settings {
 				'id'          => $this->slug . '-settings[secret_key]',
 				'name'        => $this->slug . '-settings[secret_key]',
 				'size'        => 40,
-				'description' => __( 'The secret key provided by DocuSign', 'wpcomsp-woocommerce-docusign-orders' ),
+				'description' => __( 'The secret key provided by DocuSign. (Integrations > Apps and Keys > locate your app > Actions > Edit > Add Secret Key)', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
 				'label'       => __( 'Authorization Code', 'wpcomsp-woocommerce-docusign-orders' ),
@@ -364,7 +364,7 @@ class Settings {
 				'id'          => $this->slug . '-settings[authorization_code]',
 				'name'        => $this->slug . '-settings[authorization_code]',
 				'size'        => 40,
-				'description' => __( 'The authorization code provided by DocuSign BUTTON WILL GO HERE', 'wpcomsp-woocommerce-docusign-orders' ),
+				'description' => __( 'The authorization code provided by DocuSign. Authorize or disconnect the site below.', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
 				'label'       => __( 'Enable Logging', 'wpcomsp-woocommerce-docusign-orders' ),

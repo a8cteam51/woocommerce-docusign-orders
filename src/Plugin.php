@@ -24,6 +24,16 @@ class Plugin {
 	public ?Integrations $integrations = null;
 
 	/**
+	 * Embedded DocuSign signatures component.
+	 *
+	 * @since   1.0.0
+	 * @version 1.0.0
+	 *
+	 * @var     Embedded_DocuSign|null
+	 */
+	public ?Embedded_DocuSign $docusign = null;
+
+	/**
 	 * Settings.
 	 *
 	 * @since 1.0.0
@@ -144,6 +154,8 @@ class Plugin {
 
 		$this->settings = new Settings();
 		$this->settings->initialize();
+
+		$this->docusign = new Embedded_DocuSign();
 
 		$this->maybe_install();
 	}

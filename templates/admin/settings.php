@@ -5,6 +5,16 @@
  * @package WPcomSpecialProjects\Unused_Media_Remover
  */
 
+/**
+ * If we've been redirected from OAuth, capture the returned code.
+ */
+
+// phpcs:disable WordPress.Security.NonceVerification.Recommended -- This is a redirect from DocuSign. We can't send the nonce through.
+if ( isset( $_GET['code'] ) ) {
+	wpcomsp_dwo_update_settings_data( 'authorization_code', sanitize_text_field( wp_unslash( $_GET['code'] ) ) );
+}
+// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
 ?>
 
 <div class="wrap">
@@ -17,4 +27,5 @@
 			submit_button();
 		?>
 	</form>
+	<?php wpcomsp_dwo_oauth_button(); ?>
 </div>

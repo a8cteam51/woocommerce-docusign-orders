@@ -3,6 +3,8 @@
 defined( 'ABSPATH' ) || exit;
 
 use WPCOMSpecialProjects\DocuSignWooCommerceOrders\Plugin;
+use WPCOMSpecialProjects\DocuSignWooCommerceOrders\Logger;
+use WPCOMSpecialProjects\DocuSignWooCommerceOrders\Embedded_DocuSign;
 
 // region
 
@@ -28,6 +30,21 @@ function wpcomsp_dwo_get_plugin_instance(): Plugin {
  */
 function wpcomsp_dwo_get_plugin_slug(): string {
 	return sanitize_key( WPCOMSP_DWO_METADATA['TextDomain'] );
+}
+
+/**
+ * Renders the OAuth button on the settings page
+ *
+ * @since 1.0.0.
+ * @version 1.0.0
+ *
+ * @return void
+ */
+function wpcomsp_dwo_oauth_button() {
+	$url = Embedded_DocuSign::get_authorization_url();
+	?>
+	<a class="button button-primary" href="<?php echo esc_url( $url ); ?>">Authorize</a>
+	<?php
 }
 
 // endregion

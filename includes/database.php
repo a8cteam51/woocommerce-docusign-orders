@@ -115,7 +115,7 @@ function wpcomsp_dwo_check_is_used( int $id, string $url ): bool {
  */
 function wpcomsp_dwo_get_excluded_post_types(): array {
 	return apply_filters(
-		'remove_unused_media_exclude_post_types',
+		'wpcomsp_woocommerce_docusign_exclude_post_types',
 		array(
 			'attachment',
 			'auto-draft',
