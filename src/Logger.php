@@ -49,7 +49,7 @@ final class Logger {
 	 * @since   1.0.0
 	 * @version 1.0.0
 	 *
-	 * @param   string  $message  The message to log.
+	 * @param   string $message The message to log.
 	 *
 	 * @return  void
 	 */

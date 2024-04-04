@@ -58,25 +58,25 @@ function wpcomsp_dwo_add_references_to_database( array $references ): void {
 	// $table_name = $wpdb->prefix . 'wpcomsp_dwo_media';
 
 	// if ( ! empty( $references['ids'] ) ) {
-	// 	$id_placeholder = array_fill( 0, count( $references['ids'] ), '(%d)' );
+	//  $id_placeholder = array_fill( 0, count( $references['ids'] ), '(%d)' );
 
-	// 	$wpdb->query(
-	// 		$wpdb->prepare(
-	// 			"INSERT IGNORE INTO {$table_name} (attachment_id) VALUES " . implode( ',', $id_placeholder ), // phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-	// 			$references['ids']
-	// 		)
-	// 	);
+	//  $wpdb->query(
+	//      $wpdb->prepare(
+	//          "INSERT IGNORE INTO {$table_name} (attachment_id) VALUES " . implode( ',', $id_placeholder ), // phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+	//          $references['ids']
+	//      )
+	//  );
 	// }
 
 	// if ( ! empty( $references['urls'] ) ) {
-	// 	$url_placeholder = array_fill( 0, count( $references['urls'] ), '(%s)' );
+	//  $url_placeholder = array_fill( 0, count( $references['urls'] ), '(%s)' );
 
-	// 	$wpdb->query(
-	// 		$wpdb->prepare(
-	// 			"INSERT IGNORE INTO {$table_name} (url) VALUES " . implode( ',', $url_placeholder ), // phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-	// 			$references['urls']
-	// 		)
-	// 	);
+	//  $wpdb->query(
+	//      $wpdb->prepare(
+	//          "INSERT IGNORE INTO {$table_name} (url) VALUES " . implode( ',', $url_placeholder ), // phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+	//          $references['urls']
+	//      )
+	//  );
 	// }
 }
 
@@ -85,20 +85,20 @@ function wpcomsp_dwo_add_references_to_database( array $references ): void {
  *
  * Determines this by checking if the attachment ID or URL is in the database.
  *
- * @param int    $id  The attachment ID.
- * @param string $url The URL of the media.
+ * @param integer $id  The attachment ID.
+ * @param string  $url The URL of the media.
  *
- * @return bool
+ * @return boolean
  */
 function wpcomsp_dwo_check_is_used( int $id, string $url ): bool {
 	// global $wpdb;
 
 	// $media_id = $wpdb->get_var(
-	// 	$wpdb->prepare(
-	// 		"SELECT id FROM {$wpdb->prefix}wpcomsp_dwo_media WHERE attachment_id = %d OR url = %s",
-	// 		$id,
-	// 		wpcomsp_dwo_clean_url( $url )
-	// 	)
+	//  $wpdb->prepare(
+	//      "SELECT id FROM {$wpdb->prefix}wpcomsp_dwo_media WHERE attachment_id = %d OR url = %s",
+	//      $id,
+	//      wpcomsp_dwo_clean_url( $url )
+	//  )
 	// );
 
 	// return (bool) $media_id;

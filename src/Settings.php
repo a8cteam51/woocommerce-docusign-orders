@@ -251,11 +251,11 @@ class Settings {
 						. '<p class="description">' . wp_kses_post( $args['description'] ) . '</p>',
 					array(
 						'input' => array(
-							'type'    => array(),
-							'id'      => array(),
-							'name'    => array(),
-							'size'    => array(),
-							'value'   => array(),
+							'type'     => array(),
+							'id'       => array(),
+							'name'     => array(),
+							'size'     => array(),
+							'value'    => array(),
 							'readonly' => array(),
 						),
 						'p'     => array(
@@ -315,31 +315,31 @@ class Settings {
 	private function get_settings_fields(): array {
 		$fields = array(
 			array(
-				'label'	   => __( 'Integration Key', 'wpcomsp-woocommerce-docusign-orders' ),
-				'type'	   => 'text',
-				'setting'  => 'integration_key',
-				'id'	   => $this->slug . '-settings[integration_key]',
-				'name'	   => $this->slug . '-settings[integration_key]',
-				'size' => 40,
+				'label'       => __( 'Integration Key', 'wpcomsp-woocommerce-docusign-orders' ),
+				'type'        => 'text',
+				'setting'     => 'integration_key',
+				'id'          => $this->slug . '-settings[integration_key]',
+				'name'        => $this->slug . '-settings[integration_key]',
+				'size'        => 40,
 				'description' => __( 'The integration key provided by DocuSign', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
-				'label'    => __( 'Secret Key', 'wpcomsp-woocommerce-docusign-orders' ),
-				'type'     => 'text',
-				'setting' => 'secret_key',
-				'id'      => $this->slug . '-settings[secret_key]',
-				'name'    => $this->slug . '-settings[secret_key]',
-				'size' => 40,
+				'label'       => __( 'Secret Key', 'wpcomsp-woocommerce-docusign-orders' ),
+				'type'        => 'text',
+				'setting'     => 'secret_key',
+				'id'          => $this->slug . '-settings[secret_key]',
+				'name'        => $this->slug . '-settings[secret_key]',
+				'size'        => 40,
 				'description' => __( 'The secret key provided by DocuSign', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
-				'label' => __('Authorization Code', 'wpcomsp-woocommerce-docusign-orders'),
-				'type' => 'readonly',
-				'setting' => 'authorization_code',
-				'id' => $this->slug . '-settings[authorization_code]',
-				'name' => $this->slug . '-settings[authorization_code]',
-				'size' => 40,
-				'description' => __('The authorization code provided by DocuSign BUTTON WILL GO HERE', 'wpcomsp-woocommerce-docusign-orders'),
+				'label'       => __( 'Authorization Code', 'wpcomsp-woocommerce-docusign-orders' ),
+				'type'        => 'readonly',
+				'setting'     => 'authorization_code',
+				'id'          => $this->slug . '-settings[authorization_code]',
+				'name'        => $this->slug . '-settings[authorization_code]',
+				'size'        => 40,
+				'description' => __( 'The authorization code provided by DocuSign BUTTON WILL GO HERE', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
 				'label'       => __( 'Enable Logging', 'wpcomsp-woocommerce-docusign-orders' ),
@@ -362,11 +362,11 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	public function sanitize_settings( array $settings ) : array {
-		$settings['integration_key'] = sanitize_text_field( $settings['integration_key'] );
-		$settings['secret_key']      = sanitize_text_field( $settings['secret_key'] );
+	public function sanitize_settings( array $settings ): array {
+		$settings['integration_key']    = sanitize_text_field( $settings['integration_key'] );
+		$settings['secret_key']         = sanitize_text_field( $settings['secret_key'] );
 		$settings['authorization_code'] = sanitize_text_field( $settings['authorization_code'] );
-		$settings['enable_logging']   = absint( $settings['enable_logging'] );
+		$settings['enable_logging']     = absint( $settings['enable_logging'] );
 
 		return $settings;
 	}
@@ -381,10 +381,10 @@ class Settings {
 	 */
 	public function set_default_settings(): void {
 		$defaults = array(
-			'integration_key'  => '',
-			'secret_key'       => '',
+			'integration_key'    => '',
+			'secret_key'         => '',
 			'authorization_code' => '',
-			'enable_logging'   => '0',
+			'enable_logging'     => '0',
 		);
 
 		update_option( $this->slug . '-settings', $defaults );
