@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return mixed
  */
-function wpcomsp_dwo_get_settings_data( string $key = '' ): mixed {
+function wpcomsp_dwo_get_settings_data( string $key = '' ) {
 	$settings = new \WPcomSpecialProjects\DocuSignWooCommerceOrders\Settings();
 
 	return $settings->get_settings_data( $key );
@@ -32,7 +32,7 @@ function wpcomsp_dwo_get_settings_data( string $key = '' ): mixed {
  *
  * @return void
  */
-function wpcomsp_dwo_update_settings_data( string $key, mixed $value ): void {
+function wpcomsp_dwo_update_settings_data( string $key, $value ): void {
 	$settings = new \WPcomSpecialProjects\DocuSignWooCommerceOrders\Settings();
 
 	$settings->update_settings_data( $key, $value );
