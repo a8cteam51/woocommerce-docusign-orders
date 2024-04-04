@@ -106,6 +106,7 @@ function wpcomsp_dwo_check_is_used( int $id, string $url ): bool {
 	// );
 
 	// return (bool) $media_id;
+	return true;
 }
 
 /**
