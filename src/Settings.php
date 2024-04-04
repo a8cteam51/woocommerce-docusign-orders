@@ -222,6 +222,7 @@ class Settings {
 						type="text"
 						id="' . esc_attr( $args['id'] ) . '"
 						name="' . esc_attr( $args['name'] ) . '"
+						size="' . esc_attr( $args['size'] ?? 30 ) . '"
 						value="' . esc_attr( $wp_data_value ) . '">'
 						. '<p class="description">' . wp_kses_post( $args['description'] ) . '</p>',
 					array(
@@ -229,6 +230,7 @@ class Settings {
 							'type'  => array(),
 							'id'    => array(),
 							'name'  => array(),
+							'size'  => array(),
 							'value' => array(),
 						),
 						'p'     => array(
@@ -243,6 +245,7 @@ class Settings {
 						type="text"
 						id="' . esc_attr( $args['id'] ) . '"
 						name="' . esc_attr( $args['name'] ) . '"
+						size="' . esc_attr( $args['size'] ?? 30 ) . '"
 						value="' . esc_attr( $wp_data_value ) . '"
 						readonly>'
 						. '<p class="description">' . wp_kses_post( $args['description'] ) . '</p>',
@@ -251,6 +254,7 @@ class Settings {
 							'type'    => array(),
 							'id'      => array(),
 							'name'    => array(),
+							'size'    => array(),
 							'value'   => array(),
 							'readonly' => array(),
 						),
@@ -316,6 +320,7 @@ class Settings {
 				'setting'  => 'integration_key',
 				'id'	   => $this->slug . '-settings[integration_key]',
 				'name'	   => $this->slug . '-settings[integration_key]',
+				'size' => 40,
 				'description' => __( 'The integration key provided by DocuSign', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
@@ -324,6 +329,7 @@ class Settings {
 				'setting' => 'secret_key',
 				'id'      => $this->slug . '-settings[secret_key]',
 				'name'    => $this->slug . '-settings[secret_key]',
+				'size' => 40,
 				'description' => __( 'The secret key provided by DocuSign', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
@@ -332,6 +338,7 @@ class Settings {
 				'setting' => 'authorization_code',
 				'id' => $this->slug . '-settings[authorization_code]',
 				'name' => $this->slug . '-settings[authorization_code]',
+				'size' => 40,
 				'description' => __('The authorization code provided by DocuSign BUTTON WILL GO HERE', 'wpcomsp-woocommerce-docusign-orders'),
 			),
 			array(
