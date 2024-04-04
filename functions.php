@@ -84,7 +84,7 @@ function wpcomsp_dwo_maybe_update_oauth_code() {
 function wpcomsp_dwo_is_development_environment(): bool {
 	$environment = wpcomsp_dwo_get_settings_data( 'environment' );
 	Logger::log( 'DocuSign Environment: ' . $environment );
-	return empty($environment) || $environment === 'development';
+	return empty( $environment ) || 'development' === $environment;
 }
 
 // endregion

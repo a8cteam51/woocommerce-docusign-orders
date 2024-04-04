@@ -125,7 +125,7 @@ class Settings {
 		$wp_data_value = get_option( $this->slug . '-settings', array() );
 
 		Logger::log( 'Rendering settings field: ' . $args['id'] );
-		Logger::log( print_r($wp_data_value, true));
+		Logger::log( print_r( $wp_data_value, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- Logged output.
 
 		if ( $wp_data_value && isset( $wp_data_value[ $args['setting'] ] ) ) {
 			$wp_data_value = $wp_data_value[ $args['setting'] ];
@@ -344,11 +344,11 @@ class Settings {
 	private function get_settings_fields(): array {
 		$fields = array(
 			array(
-				'label' => __('Environment', 'wpcomsp-woocommerce-docusign-orders'),
-				'type' => 'select',
+				'label'   => __( 'Environment', 'wpcomsp-woocommerce-docusign-orders' ),
+				'type'    => 'select',
 				'setting' => 'environment',
-				'id' => $this->slug . '-settings[environment]',
-				'name' => $this->slug . '-settings[environment]',
+				'id'      => $this->slug . '-settings[environment]',
+				'name'    => $this->slug . '-settings[environment]',
 				'options' => $this->get_environment_options(),
 			),
 			array(
@@ -400,7 +400,7 @@ class Settings {
 	 * @return array
 	 */
 	public function sanitize_settings( array $settings ): array {
-		$environment_options = $this->get_environment_options();
+		$environment_options            = $this->get_environment_options();
 		$settings['integration_key']    = sanitize_text_field( $settings['integration_key'] );
 		$settings['secret_key']         = sanitize_text_field( $settings['secret_key'] );
 		$settings['authorization_code'] = sanitize_text_field( $settings['authorization_code'] );
@@ -423,7 +423,7 @@ class Settings {
 	 */
 	public function set_default_settings(): void {
 		$environment = in_array( wp_get_environment_type(), array( 'development', 'staging', 'local' ), true ) ? 'development' : 'production';
-		$defaults = array(
+		$defaults    = array(
 			'environment'        => $environment,
 			'integration_key'    => '',
 			'secret_key'         => '',
@@ -439,14 +439,13 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	private function get_environment_options() : array {
+	private function get_environment_options(): array {
 		return apply_filters(
 			'wpcomsp_woocommerce_docusign_environment',
 			array(
-				'development' => __('Development', 'wpcomsp-woocommerce-docusign-orders'),
-				'production' => __('Production', 'wpcomsp-woocommerce-docusign-orders'),
+				'development' => __( 'Development', 'wpcomsp-woocommerce-docusign-orders' ),
+				'production'  => __( 'Production', 'wpcomsp-woocommerce-docusign-orders' ),
 			)
 		);
 	}
-
 }
