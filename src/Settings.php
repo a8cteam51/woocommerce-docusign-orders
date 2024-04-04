@@ -340,6 +340,14 @@ class Settings {
 	private function get_settings_fields(): array {
 		$fields = array(
 			array(
+				'label' => __('Environment', 'wpcomsp-woocommerce-docusign-orders'),
+				'type' => 'select',
+				'setting' => 'environment',
+				'id' => $this->slug . '-settings[environment]',
+				'name' => $this->slug . '-settings[environment]',
+				'options' => $this->get_environment_options(),
+			),
+			array(
 				'label'       => __( 'Integration Key', 'wpcomsp-woocommerce-docusign-orders' ),
 				'type'        => 'text',
 				'setting'     => 'integration_key',
@@ -388,10 +396,15 @@ class Settings {
 	 * @return array
 	 */
 	public function sanitize_settings( array $settings ): array {
+		$environment_options = $this->get_environment_options();
 		$settings['integration_key']    = sanitize_text_field( $settings['integration_key'] );
 		$settings['secret_key']         = sanitize_text_field( $settings['secret_key'] );
 		$settings['authorization_code'] = sanitize_text_field( $settings['authorization_code'] );
 		$settings['enable_logging']     = absint( $settings['enable_logging'] );
+
+		if ( ! array_key_exists( $settings['environment'], $environment_options ) ) {
+			$settings['environment'] = 'development';
+		}
 
 		return $settings;
 	}
@@ -405,7 +418,9 @@ class Settings {
 	 * @return void
 	 */
 	public function set_default_settings(): void {
+		$environment = in_array( wp_get_environment_type(), array( 'development', 'staging', 'local' ), true ) ? 'development' : 'production';
 		$defaults = array(
+			'environment'        => $environment,
 			'integration_key'    => '',
 			'secret_key'         => '',
 			'authorization_code' => '',
@@ -414,4 +429,20 @@ class Settings {
 
 		update_option( $this->slug . '-settings', $defaults );
 	}
+
+	/**
+	 * Returns the options for the environment setting.
+	 *
+	 * @return array
+	 */
+	private function get_environment_options() : array {
+		return apply_filters(
+			'wpcomsp_woocommerce_docusign_environment',
+			array(
+				'development' => __('Development', 'wpcomsp-woocommerce-docusign-orders'),
+				'production' => __('Production', 'wpcomsp-woocommerce-docusign-orders'),
+			)
+		);
+	}
+
 }
