@@ -63,7 +63,7 @@ class Embedded_DocuSign {
 	 * @return string The authorization URL.
 	 */
 	public static function get_authorization_url() {
-		if ( in_array( wp_get_environment_type(), array( 'local', 'development' ), true ) ) {
+		if ( wpcomsp_dwo_is_development_environment() ) {
 			$base_url = 'https://account-d.docusign.com/oauth/auth';
 		} else {
 			$base_url = 'https://account.docusign.com/oauth/auth';
@@ -88,7 +88,7 @@ class Embedded_DocuSign {
 	 * @return string The access token URL.
 	 */
 	public static function get_token_url() {
-		if ( in_array( wp_get_environment_type(), array( 'local', 'development' ), true ) ) {
+		if ( wpcomsp_dwo_is_development_environment() ) {
 			return 'https://account-d.docusign.com/oauth/token';
 		} else {
 			return 'https://account.docusign.com/oauth/token';
@@ -102,7 +102,7 @@ class Embedded_DocuSign {
 	 * @return string The user info URL.
 	 */
 	public static function get_user_info_url() {
-		if ( in_array( wp_get_environment_type(), array( 'local', 'development' ), true ) ) {
+		if ( wpcomsp_dwo_is_development_environment() ) {
 			return 'https://account-d.docusign.com/oauth/userinfo';
 		} else {
 			return 'https://account.docusign.com/oauth/userinfo';
@@ -278,7 +278,6 @@ class Embedded_DocuSign {
 
 		return $user_information;
 	}
-
 
 	// endregion METHODS
 }

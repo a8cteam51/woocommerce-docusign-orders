@@ -124,6 +124,9 @@ class Settings {
 	public function render_settings_field( $args ): void {
 		$wp_data_value = get_option( $this->slug . '-settings', array() );
 
+		Logger::log( 'Rendering settings field: ' . $args['id'] );
+		Logger::log( print_r($wp_data_value, true));
+
 		if ( $wp_data_value && isset( $wp_data_value[ $args['setting'] ] ) ) {
 			$wp_data_value = $wp_data_value[ $args['setting'] ];
 		} else {
@@ -322,6 +325,7 @@ class Settings {
 	 * @return void
 	 */
 	public function update_settings_data( string $key, mixed $value ): void {
+		Logger::log( 'Updating settings data for ' . $key . ' to ' . $value );
 		$plugin_settings = $this->get_settings_data();
 
 		$plugin_settings[ $key ] = $value;

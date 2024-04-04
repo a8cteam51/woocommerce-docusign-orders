@@ -50,7 +50,7 @@ function wpcomsp_dwo_oauth_button() {
 		<?php
 	} else {
 		?>
-	<a class="button button-primary" href="<?php echo esc_url( admin_url( 'options-general.php?page=wpcomsp_woocommerce_docusign_settings&revoke=1' ) ); ?>">Revoke</a> 
+	<a class="button button-primary" href="<?php echo esc_url( admin_url( 'options-general.php?page=wpcomsp_woocommerce_docusign_settings&revoke=1' ) ); ?>">Revoke</a>
 		<?php
 	}
 }
@@ -71,6 +71,20 @@ function wpcomsp_dwo_maybe_update_oauth_code() {
 		wpcomsp_dwo_update_settings_data( 'authorization_code', '' );
 	}
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended
+}
+
+/**
+ * Returns true if the plugin is running on a development DocuSign environment.
+ *
+ * @since 1.0.0
+ * @version 1.0.0
+ *
+ * @return boolean
+ */
+function wpcomsp_dwo_is_development_environment(): bool {
+	$environment = wpcomsp_dwo_get_settings_data( 'environment' );
+	Logger::log( 'DocuSign Environment: ' . $environment );
+	return empty($environment) || $environment === 'development';
 }
 
 // endregion
