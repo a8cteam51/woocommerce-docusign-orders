@@ -24,7 +24,7 @@
  * Text Domain:             wpcomsp-woocommerce-docusign-orders
  * Domain Path:             /languages
  * WC requires at least:    5.9
- * WC tested up to:         7.4
+ * WC tested up to:         5.9
  **/
 
 defined( 'ABSPATH' ) || exit;
