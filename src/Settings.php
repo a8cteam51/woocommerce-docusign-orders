@@ -324,7 +324,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function update_settings_data( string $key, mixed $value ): void {
+	public function update_settings_data( string $key, $value ): void {
 		Logger::log( 'Updating settings data for ' . $key . ' to ' . $value );
 		$plugin_settings = $this->get_settings_data();
 
