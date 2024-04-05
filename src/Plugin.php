@@ -221,11 +221,6 @@ class Plugin {
 			$this->settings->set_default_settings();
 		}
 
-		// Check that installed schema version isn't 0. If it is, the table hasn't been created.
-		if ( version_compare( $installed_schema_version, '0', '==' ) ) {
-			wpcomsp_dwo_create_table();
-		}
-
 		// Installation is complete. Set the installed version.
 		update_option( 'wpcomsp_dwo_plugin_version', WPCOMSP_DWO_METADATA['Version'] );
 		update_option( 'wpcomsp_dwo_schema_version', wpcomsp_dwo_get_schema_version() );
