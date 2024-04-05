@@ -23,7 +23,7 @@ final class Integrations {
 	 *
 	 * @var     WooCommerce|null
 	 */
-	public ?WooCommerce $WooCommerce = null;
+	public ?WooCommerce $woocommerce = null;
 
 	// endregion
 
@@ -38,8 +38,8 @@ final class Integrations {
 	 * @return  void
 	 */
 	public function initialize(): void {
-		$this->WooCommerce = new WooCommerce();
-		$this->WooCommerce->maybe_initialize();
+		$this->woocommerce = new WooCommerce();
+		$this->woocommerce->maybe_initialize();
 	}
 
 	// endregion
