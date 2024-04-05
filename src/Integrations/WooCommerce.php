@@ -5,12 +5,17 @@ namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders\Integrations;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Handles the integration with WooCommerce Subscriptions.
+ * Handles the integration with WooCommerce.
  *
  * @since   1.0.0
  * @version 1.0.0
  */
-class WC_Subscriptions {
+class WooCommerce {
+	// region FIELDS AND CONSTANTS
+
+
+	// endregion
+
 	// region METHODS
 
 	/**
@@ -22,7 +27,8 @@ class WC_Subscriptions {
 	 * @return  boolean
 	 */
 	public function is_active(): bool {
-		return \class_exists( 'WC_Subscriptions' );
+		// Minimum version is checked at the plugin level.
+		return \class_exists( 'WooCommerce' ) && \defined( 'WC_VERSION' );
 	}
 
 	/**
