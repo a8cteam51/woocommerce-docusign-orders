@@ -80,7 +80,7 @@ class WooCommerce {
 			array(
 				'id'          => '_docusign_link',
 				'label'       => __( 'Agreement PDF URL', 'wpcomsp-woocommerce-docusign-orders' ),
-				'class'       => 'form-row form-row-full',
+				'class'       => 'short',
 				'description' => __( 'The URL for the source PDF of the signed agreement', 'wpcomsp-woocommerce-docusign-orders' ),
 				'desc_tip'    => true,
 				'value'       => $product_object->get_meta( '_docusign_link' ),
