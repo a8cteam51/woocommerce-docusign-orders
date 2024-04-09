@@ -350,6 +350,7 @@ class Settings {
 				'id'      => $this->slug . '-settings[environment]',
 				'name'    => $this->slug . '-settings[environment]',
 				'options' => $this->get_environment_options(),
+				'description' => __( 'The DocuSign environment to connect to.', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
 				'label'       => __( 'Integration Key', 'wpcomsp-woocommerce-docusign-orders' ),
