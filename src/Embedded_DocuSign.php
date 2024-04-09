@@ -8,6 +8,13 @@
 
 namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders;
 
+use DocuSign\eSign\Model\Document;
+use DocuSign\eSign\Model\EnvelopeDefinition;
+use DocuSign\eSign\Model\Recipients;
+use DocuSign\eSign\Model\Signer;
+use DocuSign\eSign\Model\SignHere;
+use DocuSign\eSign\Model\Tabs;
+
 defined( 'ABSPATH' ) || exit;
 
 
@@ -277,6 +284,79 @@ class Embedded_DocuSign {
 		}
 
 		return $user_information;
+	}
+
+	/**
+	 * Creates a new envelope definition for the embedded signing process.
+	 *
+	 * @param array  $args     The arguments for the envelope definition.
+	 * @param string $pdf_link URL of the PDF file to be signed.
+	 *
+	 * @return EnvelopeDefinition | WP_Error The envelope definition object. WP_Error if an error occurred.
+	 */
+	public static function define_envelope( array $args, string $pdf_link ) {
+		# document 1 (pdf) has tag /sn1/
+		#
+		# The envelope has one recipient.
+		# recipient 1 - signer
+		#
+		# Read the file
+		Logger::log( 'Reading file from ' . $pdf_link );
+		$response            = wp_remote_get( $pdf_link );
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+		$content_bytes       = $response['body'];
+		$base64_file_content = base64_encode( $content_bytes );
+
+		# Create the document model
+		$document = new Document(
+			array( # create the DocuSign document object
+				'document_base64' => $base64_file_content,
+				'name'            => 'Example document', # can be different from actual file name
+				'file_extension'  => 'pdf', # many different document types are accepted
+				'document_id'     => 1, # a label used to reference the doc
+			)
+		);
+
+		# Create the signer recipient model
+		$signer = new Signer(
+			array( # The signer
+				'email'          => $args['signer_email'],
+				'name'           => $args['signer_name'],
+				'recipient_id'   => '1',
+				'routing_order'  => '1',
+				# Setting the client_user_id marks the signer as embedded
+				'client_user_id' => $args['signer_client_id'],
+			)
+		);
+
+		# Create a sign_here tab (field on the document)
+		$sign_here = new SignHere(
+			array( # DocuSign SignHere field/tab
+				'anchor_string'   => '/sn1/',
+				'anchor_units'    => 'pixels',
+				'anchor_y_offset' => '10',
+				'anchor_x_offset' => '20',
+			)
+		);
+
+		# Add the tabs model (including the sign_here tab) to the signer
+		# The Tabs object wants arrays of the different field/tab types
+		$signer->settabs( new Tabs( array( 'sign_here_tabs' => array( $sign_here ) ) ) );
+
+		// Next, create the top level envelope definition and populate it.
+		$envelope_definition = new EnvelopeDefinition(
+			array(
+				'email_subject' => 'Please sign this document sent from the PHP SDK',
+				'documents'     => array( $document ),
+				# The Recipients object wants arrays for each recipient type
+				'recipients'    => new Recipients( array( 'signers' => array( $signer ) ) ),
+				'status'        => 'sent', # requests that the envelope be created and sent.
+			)
+		);
+
+		return $envelope_definition;
 	}
 
 	// endregion METHODS
