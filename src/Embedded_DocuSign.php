@@ -8,8 +8,13 @@
 
 namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders;
 
+use DocuSign\eSign\Configuration;
+use DocuSign\eSign\Client\ApiClient;
+use DocuSign\eSign\Client\ApiException;
 use DocuSign\eSign\Model\Document;
+use DocuSign\eSign\Envelope;
 use DocuSign\eSign\Model\EnvelopeDefinition;
+use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Model\Recipients;
 use DocuSign\eSign\Model\Signer;
 use DocuSign\eSign\Model\SignHere;
@@ -179,6 +184,7 @@ class Embedded_DocuSign {
 	 * @return string The access token. Empty if not available.
 	 */
 	public static function get_access_token() {
+		Logger::log( 'Getting access token', true );
 		$access_token = get_option( 'docusign_access_token', '' );
 		$renew_time   = get_option( 'docusign_renew_time', 0 );
 
@@ -186,6 +192,7 @@ class Embedded_DocuSign {
 		if ( time() < ( $renew_time - 1800 ) && '' !== $access_token ) {
 			return $access_token;
 		} elseif ( '' !== $access_token ) {
+			Logger::log( 'Refreshing token' );
 			$access_token = self::get_refresh_token();
 		}
 
@@ -194,11 +201,14 @@ class Embedded_DocuSign {
 			return $access_token;
 		}
 
+		Logger::log( 'Could not refresh token' );
 		if ( '' === self::get_integration_key() || '' === self::get_secret_key() || '' === self::get_authorization_code() ) {
+			Logger::log( 'Missing a key, cannot retrieve access token' );
 			return false;
 		}
 
 		// Retrieve a new access token.
+		Logger::log( 'Retrieving new access token' );
 		$token_response = wp_remote_post(
 			self::get_token_url(),
 			array(
@@ -211,6 +221,8 @@ class Embedded_DocuSign {
 				),
 			)
 		);
+
+		Logger::log( 'Token response: ' . print_r( $token_response, true ) );
 
 		if ( ! is_wp_error( $token_response ) ) {
 			$token_data = json_decode( $token_response['body'] );
@@ -248,8 +260,9 @@ class Embedded_DocuSign {
 	 * @return boolean|array The user information. False if not available.
 	 */
 	public static function get_user_info() {
+		Logger::log( ' In get_user_info' );
 		$access_token = self::get_access_token();
-
+		Logger::log( 'Access token: ' . $access_token );
 		if ( '' === $access_token || false === $access_token ) {
 			return false;
 		}
@@ -283,6 +296,7 @@ class Embedded_DocuSign {
 			}
 		}
 
+		Logger::log( 'User information: ' . print_r( $user_information, true ) );
 		return $user_information;
 	}
 
@@ -294,7 +308,7 @@ class Embedded_DocuSign {
 	 *
 	 * @return EnvelopeDefinition | WP_Error The envelope definition object. WP_Error if an error occurred.
 	 */
-	public static function define_envelope( array $args, string $pdf_link ) {
+	public static function define_envelope( array $args, string $pdf_link, string $document_name ) {
 		# document 1 (pdf) has tag /sn1/
 		#
 		# The envelope has one recipient.
@@ -302,10 +316,11 @@ class Embedded_DocuSign {
 		#
 		# Read the file
 		Logger::log( 'Reading file from ' . $pdf_link );
-		$response            = wp_remote_get( $pdf_link );
+		$response = wp_remote_get( $pdf_link );
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
+		Logger::log( 'File read successfully' );
 		$content_bytes       = $response['body'];
 		$base64_file_content = base64_encode( $content_bytes );
 
@@ -313,7 +328,7 @@ class Embedded_DocuSign {
 		$document = new Document(
 			array( # create the DocuSign document object
 				'document_base64' => $base64_file_content,
-				'name'            => 'Example document', # can be different from actual file name
+				'name'            => $document_name, # can be different from actual file name
 				'file_extension'  => 'pdf', # many different document types are accepted
 				'document_id'     => 1, # a label used to reference the doc
 			)
@@ -359,5 +374,64 @@ class Embedded_DocuSign {
 		return $envelope_definition;
 	}
 
+	public static function initiate_signature( int $user_id, int $product_id ) {
+		Logger::log( 'Initiating signature for user ' . $user_id . ' on product ' . $product_id );
+		$product       = wc_get_product( $product_id );
+		$document_name = $product->get_name();
+		Logger::log( 'Document name: ' . $document_name );
+
+		$pdf_link = Plugin::get_instance()->integrations->woocommerce->get_agreement_link( $product_id );
+
+		$user = get_user_by( 'ID', $user_id );
+
+		$signer_email     = $user->user_email;
+		$signer_name      = $user->display_name;
+		$signer_client_id = strval( $user_id );
+
+		Logger::log( 'Defining envelope' );
+
+		// Define the envelope
+		$envelope_definition = self::define_envelope(
+			array(
+				'signer_email'     => $signer_email,
+				'signer_name'      => $signer_name,
+				'signer_client_id' => $signer_client_id,
+			),
+			$pdf_link,
+			$document_name
+		);
+		if ( is_wp_error( $envelope_definition ) ) {
+			Logger::log( 'Error creating envelope definition: ' . $envelope_definition->get_error_message() );
+			return $envelope_definition;
+		}
+
+		Logger::log( ' Getting user info' );
+		// Instantiate the API client.
+		$site_user_info = self::get_user_info();
+		$config         = new Configuration(
+			array(
+				'access_token'     => self::get_access_token(),
+				'base_path'        => $site_user_info['base_url'],
+				'ds_client_id'     => self::get_integration_key(),
+				'ds_client_secret' => self::get_secret_key(),
+			)
+		);
+		$api_client     = new ApiClient( $config );
+
+		// Initialize Envelopes API.
+		$envelope_api = new EnvelopesApi( $api_client );
+
+		// Using the DocuSign integration key and the prepared envelope definition, generate and retrieve an envelope ID using the Envelopes:create endpoint.
+		try {
+			Logger::log( 'Creating envelope' );
+			Logger::log( 'Account ID: ' . $site_user_info['account_id'] );
+			Logger::log( 'Envelope definition: ' . print_r( $envelope_definition, true ) );
+			$envelopeSummary = $envelope_api->createEnvelope( $site_user_info['account_id'], $envelope_definition );
+		} catch ( ApiException $e ) {
+			Logger::log( 'Exception creating envelope: ' . $e->getMessage() );
+			return $e;
+		}
+		Logger::log( 'Envelope summary: ' . print_r( $envelopeSummary, true ) );
+	}
 	// endregion METHODS
 }

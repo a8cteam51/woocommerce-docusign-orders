@@ -2,6 +2,8 @@
 
 namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders\Integrations;
 
+use WPCOMSpecialProjects\DocuSignWooCommerceOrders\Logger;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -144,6 +146,27 @@ class WooCommerce {
 			$variation_product->update_meta_data( '_docusign_link', sanitize_url( $_POST['_docusign_link'][ $i ], array( 'https' ) ) );
 			$variation_product->save_meta_data();
 		}
+	}
+
+	/**
+	 * Retrieves the agreement link for a product or variation.
+	 *
+	 * @param integer $product_id   The product ID.
+	 * @param integer $variation_id The variation ID (if applicable).
+	 *
+	 * @return string The agreement link.
+	 */
+	public function get_agreement_link( $product_id, $variation_id = 0 ) {
+		$product = wc_get_product( $product_id );
+		Logger::log( 'Product: ' . print_r( $product, true ) );
+
+		if ( $product->is_type( 'variation' ) ) {
+			$product = wc_get_product( $variation_id );
+		}
+
+		$link = $product->get_meta( '_docusign_link' );
+
+		return $link;
 	}
 
 	// endregion

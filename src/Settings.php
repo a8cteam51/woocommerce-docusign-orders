@@ -125,7 +125,6 @@ class Settings {
 		$wp_data_value = get_option( $this->slug . '-settings', array() );
 
 		Logger::log( 'Rendering settings field: ' . $args['id'] );
-		Logger::log( print_r( $wp_data_value, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- Logged output.
 
 		if ( $wp_data_value && isset( $wp_data_value[ $args['setting'] ] ) ) {
 			$wp_data_value = $wp_data_value[ $args['setting'] ];
@@ -344,12 +343,12 @@ class Settings {
 	private function get_settings_fields(): array {
 		$fields = array(
 			array(
-				'label'   => __( 'Environment', 'wpcomsp-woocommerce-docusign-orders' ),
-				'type'    => 'select',
-				'setting' => 'environment',
-				'id'      => $this->slug . '-settings[environment]',
-				'name'    => $this->slug . '-settings[environment]',
-				'options' => $this->get_environment_options(),
+				'label'       => __( 'Environment', 'wpcomsp-woocommerce-docusign-orders' ),
+				'type'        => 'select',
+				'setting'     => 'environment',
+				'id'          => $this->slug . '-settings[environment]',
+				'name'        => $this->slug . '-settings[environment]',
+				'options'     => $this->get_environment_options(),
 				'description' => __( 'The DocuSign environment to connect to.', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(

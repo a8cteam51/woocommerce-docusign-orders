@@ -53,9 +53,14 @@ final class Logger {
 	 *
 	 * @return  void
 	 */
-	public static function log( string $message ): void {
+	public static function log( string $message, bool $include_stack = false ): void {
 		if ( wpcomsp_dwo_get_settings_data( 'enable_logging' ) ) {
 			error_log( 'Log from ' . WPCOMSP_DWO_METADATA['Name'] . ":\n{$message}" ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug log when set.
+
+			if ( $include_stack ) {
+				$e = new \Exception();
+				error_log( "Call stack:\n" . $e->getTraceAsString() );
+			}
 		}
 	}
 
