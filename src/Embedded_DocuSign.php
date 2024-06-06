@@ -374,6 +374,14 @@ class Embedded_DocuSign {
 		return $envelope_definition;
 	}
 
+	/**
+	 * Initiates the signature process for a user on a specific product.
+	 *
+	 * @param integer $user_id    The user ID initiating the signature.
+	 * @param integer $product_id The product ID to be signed.
+	 *
+	 * @return void
+	 */
 	public static function initiate_signature( int $user_id, int $product_id ) {
 		Logger::log( 'Initiating signature for user ' . $user_id . ' on product ' . $product_id );
 		$product       = wc_get_product( $product_id );
@@ -426,12 +434,12 @@ class Embedded_DocuSign {
 			Logger::log( 'Creating envelope' );
 			Logger::log( 'Account ID: ' . $site_user_info['account_id'] );
 			Logger::log( 'Envelope definition: ' . print_r( $envelope_definition, true ) );
-			$envelopeSummary = $envelope_api->createEnvelope( $site_user_info['account_id'], $envelope_definition );
+			$envelope_summary = $envelope_api->createEnvelope( $site_user_info['account_id'], $envelope_definition );
 		} catch ( ApiException $e ) {
 			Logger::log( 'Exception creating envelope: ' . $e->getMessage() );
 			return $e;
 		}
-		Logger::log( 'Envelope summary: ' . print_r( $envelopeSummary, true ) );
+		Logger::log( 'Envelope summary: ' . print_r( $envelope_summary, true ) );
 	}
 	// endregion METHODS
 }
