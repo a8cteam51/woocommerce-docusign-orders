@@ -91,6 +91,8 @@ class Embedded_DocuSign {
 			$base_url
 		);
 
+		Logger::log( 'Authorization URL: ' . $api_url);
+
 		return $api_url;
 	}
 
@@ -377,6 +379,7 @@ class Embedded_DocuSign {
 	/**
 	 * Initiates the signature process for a user on a specific product.
 	 *
+	 * TODO: This will need to be connected to a specific order and line item. The product will determine which PDF they sign.
 	 * @param integer $user_id    The user ID initiating the signature.
 	 * @param integer $product_id The product ID to be signed.
 	 *
@@ -387,6 +390,7 @@ class Embedded_DocuSign {
 		$product       = wc_get_product( $product_id );
 		$document_name = $product->get_name();
 		Logger::log( 'Document name: ' . $document_name );
+		$authentication_method = 'wplogin';
 
 		$pdf_link = Plugin::get_instance()->integrations->woocommerce->get_agreement_link( $product_id );
 
@@ -440,6 +444,15 @@ class Embedded_DocuSign {
 			return $e;
 		}
 		Logger::log( 'Envelope summary: ' . print_r( $envelope_summary, true ) );
+
+		$recipient_view_request = array(
+			'authenticationMethod' => $authentication_method,
+			'clientUserId' => wp_get_current_user()->user_email,
+		);
+
+		$view_url = $api_client->getRecipientView( $site_user_info['account_id'], $envelope_summary->getEnvelopeId(), $recipient_view_request );
+		Logger::log( 'View URL: ' . print_r( $view_url, true ) );
+		var_dump( $view_url );
 	}
 	// endregion METHODS
 }

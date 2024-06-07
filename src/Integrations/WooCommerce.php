@@ -158,7 +158,7 @@ class WooCommerce {
 	 */
 	public function get_agreement_link( $product_id, $variation_id = 0 ) {
 		$product = wc_get_product( $product_id );
-		Logger::log( 'Product: ' . print_r( $product, true ) );
+		// Logger::log( 'Product: ' . print_r( $product, true ) );
 
 		if ( $product->is_type( 'variation' ) ) {
 			$product = wc_get_product( $variation_id );
