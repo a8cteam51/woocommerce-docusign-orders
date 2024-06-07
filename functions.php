@@ -65,9 +65,10 @@ function wpcomsp_dwo_oauth_button() {
  */
 function wpcomsp_dwo_maybe_update_oauth_code() {
 	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- This is a redirect from DocuSign. We can't send the nonce through.
-	if ( isset( $_GET['code'] ) ) {
+	if ( isset( $_GET['code'] ) && ! empty( $_GET['code'] ) ) {
 		wpcomsp_dwo_update_settings_data( 'authorization_code', sanitize_text_field( wp_unslash( $_GET['code'] ) ) );
 	} elseif ( isset( $_GET['revoke'] ) ) {
+		Logger::log( 'Revoking OAuth' );
 		wpcomsp_dwo_update_settings_data( 'authorization_code', '' );
 	}
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended

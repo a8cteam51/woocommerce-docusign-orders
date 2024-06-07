@@ -186,8 +186,8 @@ class Embedded_DocuSign {
 	 * @return string The access token. Empty if not available.
 	 */
 	public static function get_access_token() {
-		Logger::log( '' );
-		$access_token = get_option( 'dGetting access tokenocusign_access_token', '' );
+		Logger::log( 'Getting access token' );
+		$access_token = get_option( 'docusign_access_token', '' );
 		$renew_time   = get_option( 'docusign_renew_time', 0 );
 
 		// The token we have stored is still valid.
@@ -416,50 +416,67 @@ class Embedded_DocuSign {
 			Logger::log( 'Error creating envelope definition: ' . $envelope_definition->get_error_message() );
 			return $envelope_definition;
 		}
-
+		// Logger::log( 'Envelope definition: ' . print_r( $envelope_definition, true ) );
 		Logger::log( ' Getting user info' );
 		// Instantiate the API client.
 		$site_user_info = self::get_user_info();
-		$config_data = 			array(
-			'access_token'     => self::get_access_token(),
-			'base_path'        => $site_user_info['base_url'],
-			'ds_client_id'     => self::get_integration_key(),
-			'ds_client_secret' => self::get_secret_key(),
+		// $access_token =  self::get_access_token();
+		// $base_path =  $site_user_info['base_url'];
+		// $ds_client_id =  self::get_integration_key();
+		// $ds_client_secret =  self::get_secret_key();
+
+		$request_url = $site_user_info['base_url'] . '/restapi/v2.1/accounts/' . $site_user_info['account_id'] . '/envelopes';
+		$post_data = 			array(
+			'headers' => array(
+				'Authorization' => 'Bearer ' . self::get_access_token(),
+			),
+			'body'    => array(
+				'envelopeDefinition' => $envelope_definition
+			),
 		);
 
-		Logger::log( 'Configuration data: ' . print_r( $config_data, true ) );
+		Logger::log( 'Request URL: ' . $request_url );
+		Logger::log( 'Post data: ' . print_r( $post_data, true ) );
+		$envelope_response = wp_remote_post( $request_url, $post_data );
 
-		$config         = new Configuration( $config_data );
+		Logger::log( 'Envelope response: ' . print_r( $envelope_response, true ) );
 
-		if ( wpcomsp_dwo_get_settings_data( 'enable_logging' ) ) {
-			$config->setDebug(true);
-		}
 
-		$api_client     = new ApiClient( $config );
+		// Logger::log( 'Configuration data: ' . print_r( $config_data, true ) );
 
-		// Initialize Envelopes API.
-		$envelope_api = new EnvelopesApi( $api_client );
+		// $config         = new Configuration( $config_data );
 
-		// Using the DocuSign integration key and the prepared envelope definition, generate and retrieve an envelope ID using the Envelopes:create endpoint.
-		try {
-			Logger::log( 'Creating envelope' );
-			Logger::log( 'Account ID: ' . $site_user_info['account_id'] );
-			Logger::log( 'Envelope definition: ' . print_r( $envelope_definition, true ) );
-			$envelope_summary = $envelope_api->createEnvelope( $site_user_info['account_id'], $envelope_definition );
-		} catch ( ApiException $e ) {
-			Logger::log( 'Exception creating envelope: ' . $e->getMessage() );
-			return $e;
-		}
-		Logger::log( 'Envelope summary: ' . print_r( $envelope_summary, true ) );
+		// if ( wpcomsp_dwo_get_settings_data( 'enable_logging' ) ) {
+		// 	$config->setDebug(true);
+		// }
 
-		$recipient_view_request = array(
-			'authenticationMethod' => $authentication_method,
-			'clientUserId' => wp_get_current_user()->user_email,
-		);
+		// $api_client     = new ApiClient( $config );
 
-		$view_url = $api_client->getRecipientView( $site_user_info['account_id'], $envelope_summary->getEnvelopeId(), $recipient_view_request );
-		Logger::log( 'View URL: ' . print_r( $view_url, true ) );
-		var_dump( $view_url );
+		// // Initialize Envelopes API.
+		// $envelope_api = new EnvelopesApi( $api_client );
+
+		// Logger::log('Confirming the API Config: ' . print_r($envelope_api->apiClient->getConfig(), true));
+
+		// // Using the DocuSign integration key and the prepared envelope definition, generate and retrieve an envelope ID using the Envelopes:create endpoint.
+		// try {
+		// 	Logger::log( 'Creating envelope' );
+		// 	Logger::log( 'Account ID: ' . $site_user_info['account_id'] );
+		// 	Logger::log( 'Envelope definition: ' . print_r( $envelope_definition, true ) );
+		// 	$envelope_summary = $envelope_api->createEnvelope( $site_user_info['account_id'], $envelope_definition );
+		// } catch ( ApiException $e ) {
+		// 	Logger::log( 'Exception creating envelope: ' . $e->getMessage() );
+		// 	return $e;
+		// }
+		// Logger::log( 'Envelope summary: ' . print_r( $envelope_summary, true ) );
+
+		// $recipient_view_request = array(
+		// 	'authenticationMethod' => $authentication_method,
+		// 	'clientUserId' => wp_get_current_user()->user_email,
+		// );
+
+		// $view_url = $api_client->getRecipientView( $site_user_info['account_id'], $envelope_summary->getEnvelopeId(), $recipient_view_request );
+		// Logger::log( 'View URL: ' . print_r( $view_url, true ) );
+		// var_dump( $view_url );
 	}
 	// endregion METHODS
 }
