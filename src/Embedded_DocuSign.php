@@ -186,8 +186,8 @@ class Embedded_DocuSign {
 	 * @return string The access token. Empty if not available.
 	 */
 	public static function get_access_token() {
-		Logger::log( 'Getting access token', true );
-		$access_token = get_option( 'docusign_access_token', '' );
+		Logger::log( '' );
+		$access_token = get_option( 'dGetting access tokenocusign_access_token', '' );
 		$renew_time   = get_option( 'docusign_renew_time', 0 );
 
 		// The token we have stored is still valid.
@@ -420,14 +420,21 @@ class Embedded_DocuSign {
 		Logger::log( ' Getting user info' );
 		// Instantiate the API client.
 		$site_user_info = self::get_user_info();
-		$config         = new Configuration(
-			array(
-				'access_token'     => self::get_access_token(),
-				'base_path'        => $site_user_info['base_url'],
-				'ds_client_id'     => self::get_integration_key(),
-				'ds_client_secret' => self::get_secret_key(),
-			)
+		$config_data = 			array(
+			'access_token'     => self::get_access_token(),
+			'base_path'        => $site_user_info['base_url'],
+			'ds_client_id'     => self::get_integration_key(),
+			'ds_client_secret' => self::get_secret_key(),
 		);
+
+		Logger::log( 'Configuration data: ' . print_r( $config_data, true ) );
+
+		$config         = new Configuration( $config_data );
+
+		if ( wpcomsp_dwo_get_settings_data( 'enable_logging' ) ) {
+			$config->setDebug(true);
+		}
+
 		$api_client     = new ApiClient( $config );
 
 		// Initialize Envelopes API.
