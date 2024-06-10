@@ -148,18 +148,22 @@ class Embedded_DocuSign {
 			return false;
 		}
 
+		$token_url = self::get_token_url();
+		$token_args = 			array(
+			'headers' => array(
+				'Authorization' => 'Basic ' . self::get_authorization_header(),
+			),
+			'body'    => array(
+				'grant_type'    => 'refresh_token',
+				'refresh_token' => $refresh_token,
+			),
+		);
+
+		Logger::log( "Refreshing access token. POST Request:\nURL: {$token_url}\nArgs:\n" . print_r($token_args, true) );
 		// Retrieve a new access token.
 		$token_response = wp_remote_post(
-			self::get_token_url(),
-			array(
-				'headers' => array(
-					'Authorization' => 'Basic ' . self::get_authorization_header(),
-				),
-				'body'    => array(
-					'grant_type'    => 'refresh_token',
-					'refresh_token' => $refresh_token,
-				),
-			)
+			$token_url,
+			$token_args
 		);
 
 		if ( ! is_wp_error( $token_response ) ) {
@@ -210,18 +214,21 @@ class Embedded_DocuSign {
 		}
 
 		// Retrieve a new access token.
-		Logger::log( 'Retrieving new access token' );
+		$token_url = self::get_token_url();
+		$token_args = 			array(
+			'headers' => array(
+				'Authorization' => 'Basic ' . self::get_authorization_header(),
+			),
+			'body'    => array(
+				'grant_type' => 'authorization_code',
+				'code'       => self::get_authorization_code(),
+			),
+		)
+		;
+		Logger::log( "Retrieving new access token\nURL: {$token_url}\nArgs: " . print_r($token_args, true) );
 		$token_response = wp_remote_post(
-			self::get_token_url(),
-			array(
-				'headers' => array(
-					'Authorization' => 'Basic ' . self::get_authorization_header(),
-				),
-				'body'    => array(
-					'grant_type' => 'authorization_code',
-					'code'       => self::get_authorization_code(),
-				),
-			)
+			$token_url,
+			$token_args
 		);
 
 		Logger::log( 'Token response: ' . print_r( $token_response, true ) );
@@ -275,13 +282,18 @@ class Embedded_DocuSign {
 			return $user_information;
 		}
 
+		$user_info_url = self::get_user_info_url();
+		$user_info_args =
+		array(
+			'headers' => array(
+				'Authorization' => 'Bearer ' . $access_token,
+		));
+
+		Logger::log( "GET Request:\nURL: {$user_info_url}\nArgs:\n" . print_r($user_info_args, true) );
+
 		$token_response = wp_remote_get(
-			self::get_user_info_url(),
-			array(
-				'headers' => array(
-					'Authorization' => 'Bearer ' . $access_token,
-				),
-			)
+			$user_info_url,
+			$user_info_args
 		);
 
 		$user_information = array();
@@ -317,61 +329,54 @@ class Embedded_DocuSign {
 		# recipient 1 - signer
 		#
 		# Read the file
-		Logger::log( 'Reading file from ' . $pdf_link );
-		$response = wp_remote_get( $pdf_link );
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
-		Logger::log( 'File read successfully' );
-		$content_bytes       = $response['body'];
-		$base64_file_content = base64_encode( $content_bytes );
+		// Logger::log( 'GET Request: Reading file from ' . $pdf_link );
+		// $response = wp_remote_get( $pdf_link );
+		// if ( is_wp_error( $response ) ) {
+		// 	return $response;
+		// }
+		// Logger::log( 'File read successfully' );
+		// $content_bytes       = $response['body'];
+		// $base64_file_content = base64_encode( $content_bytes );
 
 		# Create the document model
-		$document = new Document(
-			array( # create the DocuSign document object
-				'document_base64' => $base64_file_content,
-				'name'            => $document_name, # can be different from actual file name
-				'file_extension'  => 'pdf', # many different document types are accepted
-				'document_id'     => 1, # a label used to reference the doc
-			)
-		);
+		// $document = array(
+		// 		'documentBase64' => $base64_file_content,
+		// 		'name'            => $document_name, # can be different from actual file name
+		// 		'fileExtension'  => 'pdf', # many different document types are accepted
+		// 		'documentId'     => 1, # a label used to reference the doc
+		// );
 
 		# Create the signer recipient model
-		$signer = new Signer(
+		$signer =
 			array( # The signer
 				'email'          => $args['signer_email'],
-				'name'           => $args['signer_name'],
-				'recipient_id'   => '1',
-				'routing_order'  => '1',
-				# Setting the client_user_id marks the signer as embedded
-				'client_user_id' => $args['signer_client_id'],
-			)
+				'fullName'           => $args['signer_name'],
+				'recipientId'   => '1',
+				'routingOrder'  => '1',
+				# Setting the clientUserId marks the signer as embedded
+				'clientUserId' => $args['signer_client_id'],
 		);
 
 		# Create a sign_here tab (field on the document)
-		$sign_here = new SignHere(
+		$sign_here =
 			array( # DocuSign SignHere field/tab
-				'anchor_string'   => '/sn1/',
-				'anchor_units'    => 'pixels',
-				'anchor_y_offset' => '10',
-				'anchor_x_offset' => '20',
-			)
+				'anchorString'   => '/sn1/',
+				'anchorUnits'    => 'pixels',
+				'anchorXOffset' => '20',
+				'anchorYOffset' => '10',
 		);
 
-		# Add the tabs model (including the sign_here tab) to the signer
-		# The Tabs object wants arrays of the different field/tab types
-		$signer->settabs( new Tabs( array( 'sign_here_tabs' => array( $sign_here ) ) ) );
 
-		// Next, create the top level envelope definition and populate it.
-		$envelope_definition = new EnvelopeDefinition(
-			array(
-				'email_subject' => 'Please sign this document sent from the PHP SDK',
-				'documents'     => array( $document ),
-				# The Recipients object wants arrays for each recipient type
-				'recipients'    => new Recipients( array( 'signers' => array( $signer ) ) ),
-				'status'        => 'sent', # requests that the envelope be created and sent.
-			)
+		$envelope_definition = 			array(
+			'emailSubject' => 'Please sign this document sent from the PHP SDK',
+			// 'documents'     => array( $document ),
+			'documentsCombinedUri' => $pdf_link,
+			# The Recipients object wants arrays for each recipient type
+			'recipients'    => array( 'signers' => array( $signer ) ),
+			'status'        => 'sent', # requests that the envelope be created and sent.
 		);
+
+		// Logger::log( 'Envelope definition: ' . print_r( $envelope_definition, true ) );
 
 		return $envelope_definition;
 	}
@@ -426,18 +431,15 @@ class Embedded_DocuSign {
 		// $ds_client_secret =  self::get_secret_key();
 
 		$request_url = $site_user_info['base_url'] . '/restapi/v2.1/accounts/' . $site_user_info['account_id'] . '/envelopes';
-		$post_data = 			array(
+		$args = 			array(
 			'headers' => array(
 				'Authorization' => 'Bearer ' . self::get_access_token(),
 			),
-			'body'    => array(
-				'envelopeDefinition' => $envelope_definition
-			),
+			'body'    => $envelope_definition,
 		);
 
-		Logger::log( 'Request URL: ' . $request_url );
-		Logger::log( 'Post data: ' . print_r( $post_data, true ) );
-		$envelope_response = wp_remote_post( $request_url, $post_data );
+		Logger::log( "POST Request:\n URL: {$request_url}\nPost data:\n" . print_r($args, true) );
+		$envelope_response = wp_remote_post( $request_url, $args );
 
 		Logger::log( 'Envelope response: ' . print_r( $envelope_response, true ) );
 

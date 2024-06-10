@@ -13,7 +13,7 @@ use WPCOMSpecialProjects\DocuSignWooCommerceOrders\Logger;
 
 wpcomsp_dwo_maybe_update_oauth_code();
 
-if ( isset( $_GET['tacotest'] ) ) {
+if ( isset( $_POST['tacotest'] ) ) {
 	Logger::log( 'Taco Test Start' );
 	$test = WPCOMSpecialProjects\DocuSignWooCommerceOrders\Embedded_DocuSign::initiate_signature( get_current_user_id(), 1291 );
 
@@ -35,5 +35,8 @@ if ( isset( $_GET['tacotest'] ) ) {
 		?>
 	</form>
 	<?php wpcomsp_dwo_oauth_button(); ?>
-	<a class="button button-primary" href="/wp-admin/options-general.php?page=wpcomsp_woocommerce_docusign_settings&tacotest">Test</a>
+	<form method="post">
+	 <input type="hidden" name="tacotest" value="1">
+	 <input type="submit" value="Taco Test">
+	</form>
 </div>

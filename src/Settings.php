@@ -129,7 +129,7 @@ class Settings {
 		if ( $wp_data_value && isset( $wp_data_value[ $args['setting'] ] ) ) {
 			$wp_data_value = $wp_data_value[ $args['setting'] ];
 		} else {
-			$wp_data_value = array();
+			$wp_data_value = false;
 		}
 
 		switch ( $args['type'] ) {
@@ -306,7 +306,7 @@ class Settings {
 		$settings = get_option( $this->slug . '-settings' );
 
 		if ( ! empty( $key ) ) {
-			return $settings[ $key ] ?? array();
+			return $settings[ $key ] ?? '';
 		}
 
 		return $settings ?? array();
@@ -404,7 +404,7 @@ class Settings {
 		$settings['integration_key']    = sanitize_text_field( $settings['integration_key'] );
 		$settings['secret_key']         = sanitize_text_field( $settings['secret_key'] );
 		$settings['authorization_code'] = sanitize_text_field( $settings['authorization_code'] );
-		$settings['enable_logging']     = absint( $settings['enable_logging'] );
+		$settings['enable_logging']     = array_key_exists('enable_logging', $settings) ? absint( $settings['enable_logging'] ) : 0;
 
 		if ( ! array_key_exists( $settings['environment'], $environment_options ) ) {
 			$settings['environment'] = 'development';
