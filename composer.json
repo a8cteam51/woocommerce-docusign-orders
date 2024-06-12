@@ -64,6 +64,8 @@
 
     "format:php": "phpcbf --standard=./.phpcs.xml --basepath=. . -v",
     "lint:php": "phpcs --standard=./.phpcs.xml --basepath=. . -v",
+    "format:php:file": "phpcbf --standard=./.phpcs.xml --basepath=. -v",
+    "lint:php:file": "phpcs --standard=./.phpcs.xml --basepath=. -v",
 
     "internationalize": [
       "@makepot",
