@@ -398,7 +398,7 @@ class Settings {
 				'name'        => $this->slug . '-settings[rsa_key]',
 				'rows'        => 2,
 				'cols'        => 80,
-				'description' => __( 'The RSA Private Key for the integration. (Integrations > Apps and Keys > Edit the Integration > Generate RSA > Copy the RSA Private Key in its entirety)', 'wpcomsp-woocommerce-docusign-orders' ),
+				'description' => __( 'The RSA Private Key for the integration. (Integrations > Apps and Keys > Edit the Integration > Generate or Upload RSA > Copy the RSA Private Key in its entirety)', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
 				'label'       => __( 'Enable Logging', 'wpcomsp-woocommerce-docusign-orders' ),

@@ -13,6 +13,12 @@ defined( 'ABSPATH' ) || exit;
 class WooCommerce {
 	// region FIELDS AND CONSTANTS
 
+	const LOGGER_CONTEXT = array(
+		'source' => 'woocommerce-docusign-orders',
+	);
+
+	public ?\WC_Logger $logger = null;
+
 
 	// endregion
 
@@ -56,6 +62,10 @@ class WooCommerce {
 	 * @return  void
 	 */
 	protected function initialize(): void {
+		// Initialize our logger
+		$this->logger = new \WC_Logger();
+		$this->logger->debug( 'WooCommerce integration initialized', self::LOGGER_CONTEXT );
+
 		// Custom product field for PDF file link.
 		add_action( 'woocommerce_product_options_pricing', array( $this, 'add_pdf_link_field_simple_product' ) );
 		add_action( 'woocommerce_process_product_meta', array( $this, 'save_pdf_link_field_simple_product' ) );

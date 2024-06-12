@@ -2,8 +2,6 @@
 
 namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders;
 
-use WPCOMSpecialProjects\DocuSignWooCommerceOrders\Settings;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -79,3 +77,5 @@ final class Logger {
 
 	// endregion
 }
+
+Logger::log( 'Logger loaded.');

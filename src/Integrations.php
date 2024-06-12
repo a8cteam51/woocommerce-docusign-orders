@@ -3,6 +3,7 @@
 namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders;
 
 use WPCOMSpecialProjects\DocuSignWooCommerceOrders\Integrations\WooCommerce;
+use WPCOMSpecialProjects\DocuSignWooCommerceOrders\Integrations\DocuSign;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -25,6 +26,16 @@ final class Integrations {
 	 */
 	public ?WooCommerce $woocommerce = null;
 
+	/**
+	 * The DocuSign integration instance.
+	 *
+	 * @since   1.0.0
+	 * @version 1.0.0
+	 *
+	 * @var     DocuSign|null
+	 */
+	public ?DocuSign $docusign = null;
+
 	// endregion
 
 	// region METHODS
@@ -40,6 +51,9 @@ final class Integrations {
 	public function initialize(): void {
 		$this->woocommerce = new WooCommerce();
 		$this->woocommerce->maybe_initialize();
+
+		$this->docusign = new DocuSign();
+		$this->docusign->maybe_initialize();
 	}
 
 	// endregion
