@@ -264,6 +264,27 @@ class Settings {
 					)
 				);
 				break;
+			case 'textarea':
+				echo wp_kses(
+					'<textarea
+						id="' . esc_attr( $args['id'] ) . '"
+						name="' . esc_attr( $args['name'] ) . '"
+						rows="' . esc_attr( $args['rows'] ?? 5 ) . '"
+						cols="' . esc_attr( $args['cols'] ?? 30 ) . '">' . esc_textarea( $wp_data_value ) . '</textarea>'
+						. '<p class="description">' . wp_kses_post( $args['description'] ) . '</p>',
+					array(
+						'textarea' => array(
+							'id'   => array(),
+							'name' => array(),
+							'rows' => array(),
+							'cols' => array(),
+						),
+						'p'        => array(
+							'class' => array(),
+						),
+					)
+				);
+				break;
 			case 'readonly':
 				echo wp_kses(
 					'<input
