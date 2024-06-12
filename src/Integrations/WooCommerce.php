@@ -2,8 +2,6 @@
 
 namespace WPCOMSpecialProjects\DocuSignWooCommerceOrders\Integrations;
 
-use WPCOMSpecialProjects\DocuSignWooCommerceOrders\Logger;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -68,8 +66,6 @@ class WooCommerce {
 	// endregion
 
 	// region HOOKS
-
-	// ADD HOOK AND FILTER METHODS HERE
 
 	/**
 	 * Add agreement link to Simple product.
