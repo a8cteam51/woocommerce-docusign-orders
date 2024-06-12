@@ -382,22 +382,23 @@ class Settings {
 				'description' => __( 'The integration key provided by DocuSign. (Integrations > Apps and Keys)', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
-				'label'       => __( 'Secret Key', 'wpcomsp-woocommerce-docusign-orders' ),
+				'label'       => __( 'DocuSign User ID', 'wpcomsp-woocommerce-docusign-orders' ),
 				'type'        => 'text',
-				'setting'     => 'secret_key',
-				'id'          => $this->slug . '-settings[secret_key]',
-				'name'        => $this->slug . '-settings[secret_key]',
+				'setting'     => 'user_id',
+				'id'          => $this->slug . '-settings[user_id]',
+				'name'        => $this->slug . '-settings[user_id]',
 				'size'        => 40,
-				'description' => __( 'The secret key provided by DocuSign. (Integrations > Apps and Keys > locate your app > Actions > Edit > Add Secret Key)', 'wpcomsp-woocommerce-docusign-orders' ),
+				'description' => __( 'The DocuSign User ID that will generate the signature requests.  (Integrations > Apps and Keys > User ID)', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
-				'label'       => __( 'Authorization Code', 'wpcomsp-woocommerce-docusign-orders' ),
-				'type'        => 'readonly',
-				'setting'     => 'authorization_code',
-				'id'          => $this->slug . '-settings[authorization_code]',
-				'name'        => $this->slug . '-settings[authorization_code]',
-				'size'        => 40,
-				'description' => __( 'The authorization code provided by DocuSign. Authorize or disconnect the site below.', 'wpcomsp-woocommerce-docusign-orders' ),
+				'label'       => __( 'RSA Key', 'wpcomsp-woocommerce-docusign-orders' ),
+				'type'        => 'textarea',
+				'setting'     => 'rsa_key',
+				'id'          => $this->slug . '-settings[rsa_key]',
+				'name'        => $this->slug . '-settings[rsa_key]',
+				'rows'        => 2,
+				'cols'        => 80,
+				'description' => __( 'The RSA Private Key for the integration. (Integrations > Apps and Keys > Edit the Integration > Generate RSA > Copy the RSA Private Key in its entirety)', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
 				'label'       => __( 'Enable Logging', 'wpcomsp-woocommerce-docusign-orders' ),
@@ -406,7 +407,7 @@ class Settings {
 				'value'       => '1',
 				'id'          => $this->slug . '-settings[enable_logging]',
 				'name'        => $this->slug . '-settings[enable_logging]',
-				'description' => __( 'Log the actions the plugin takes', 'wpcomsp-woocommerce-docusign-orders' ),
+				'description' => __( 'Log the actions the plugin takes.', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 		);
 
@@ -421,11 +422,11 @@ class Settings {
 	 * @return array
 	 */
 	public function sanitize_settings( array $settings ): array {
-		$environment_options            = $this->get_environment_options();
-		$settings['integration_key']    = sanitize_text_field( $settings['integration_key'] );
-		$settings['secret_key']         = sanitize_text_field( $settings['secret_key'] );
-		$settings['authorization_code'] = sanitize_text_field( $settings['authorization_code'] );
-		$settings['enable_logging']     = array_key_exists('enable_logging', $settings) ? absint( $settings['enable_logging'] ) : 0;
+		$environment_options         = $this->get_environment_options();
+		$settings['integration_key'] = sanitize_text_field( $settings['integration_key'] );
+		$settings['user_id']         = sanitize_text_field( $settings['user_id'] );
+		$settings['rsa_key']         = sanitize_textarea_field( $settings['rsa_key'] );
+		$settings['enable_logging']  = array_key_exists( 'enable_logging', $settings ) ? absint( $settings['enable_logging'] ) : 0;
 
 		if ( ! array_key_exists( $settings['environment'], $environment_options ) ) {
 			$settings['environment'] = 'development';
@@ -445,11 +446,11 @@ class Settings {
 	public function set_default_settings(): void {
 		$environment = in_array( wp_get_environment_type(), array( 'development', 'staging', 'local' ), true ) ? 'development' : 'production';
 		$defaults    = array(
-			'environment'        => $environment,
-			'integration_key'    => '',
-			'secret_key'         => '',
-			'authorization_code' => '',
-			'enable_logging'     => '0',
+			'environment'     => $environment,
+			'integration_key' => '',
+			'user_id'         => '',
+			'rsa_key'         => '',
+			'enable_logging'  => '0',
 		);
 
 		update_option( $this->slug . '-settings', $defaults );
