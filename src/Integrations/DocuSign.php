@@ -18,15 +18,15 @@ defined( 'ABSPATH' ) || exit;
 class DocuSign {
 	// region FIELDS AND CONSTANTS
 
-	private ?Settings $settings = null;
-	private ?ApiClient $api_client = null;
+	private ?Settings $settings       = null;
+	private ?ApiClient $api_client    = null;
 	private ?WooCommerce $woocommerce = null;
 
 	private $authorization = array();
 
-	private $oauth_base_path = '';
+	private $oauth_base_path       = '';
 	private $customer_redirect_url = '';
-	private $admin_redirect_url = '';
+	private $admin_redirect_url    = '';
 
 	const OAUTH_SCOPES = 'signature impersonation';
 
@@ -73,10 +73,10 @@ class DocuSign {
 	 */
 	protected function initialize(): void {
 		$this->woocommerce = new WooCommerce();
-		$this->settings = new Settings();
-		$this->api_client = new ApiClient();
+		$this->settings    = new Settings();
+		$this->api_client  = new ApiClient();
 
-		$this->api_client->getOAuth()->setOAuthBasePath( $this->get_oauth_base_path() );
+		$this->api_client->getOAuth()->setOAuthBasePath( $this->get_oauth_domain() );
 
 		$authorization_option = get_option( 'wpcomsp_dwo_docusign_authorization', array() );
 
@@ -92,15 +92,28 @@ class DocuSign {
 	}
 
 	/**
-	 * Gets the oAuth base path based on the current environment.
+	 * Gets the oAuth domain based on the current environment.
 	 *
 	 * @return string
 	 */
-	public function get_oauth_base_path(): string {
+	public function get_oauth_domain(): string {
 		if ( wpcomsp_dwo_is_development_environment() ) {
 			return 'account-d.docusign.com';
 		} else {
 			return 'account.docusign.com';
+		}
+	}
+
+	/**
+	 * Gets the base domain for the DocuSign API based on the current environment.
+	 *
+	 * @return string
+	 */
+	public function get_base_domain(): string {
+		if ( wpcomsp_dwo_is_development_environment() ) {
+			return 'demo.docusign.net';
+		} else {
+			return 'docusign.net';
 		}
 	}
 
@@ -110,13 +123,15 @@ class DocuSign {
 	 * @return string
 	 */
 	public function get_authorization_url(): string {
-		return 'https://' . $this->get_oauth_base_path() . '/oauth/auth?'
-			. http_build_query( array(
-				'response_type' => 'code',
-				'scope'         => self::OAUTH_SCOPES,
-				'client_id'     => $this->get_integration_key(),
-				'redirect_uri'  => $this->admin_redirect_url,
-			));
+		return 'https://' . $this->get_oauth_domain() . '/oauth/auth?'
+			. http_build_query(
+				array(
+					'response_type' => 'code',
+					'scope'         => self::OAUTH_SCOPES,
+					'client_id'     => $this->get_integration_key(),
+					'redirect_uri'  => $this->admin_redirect_url,
+				)
+			);
 	}
 
 	/**
@@ -133,9 +148,26 @@ class DocuSign {
 	 *
 	 * @return boolean
 	 */
-	public function confirm_authorization(): bool {
-		// TODO: Implement this method.
-		return $this->authorization['is_authorized'];
+	public function confirm_authorization(): bool|\WP_Error {
+		try {
+			$response = $this->api_client->requestJWTUserToken(
+				$this->get_integration_key(),
+				$this->get_user_id(),
+				$this->get_rsa_key(),
+				self::OAUTH_SCOPES
+			);
+		} catch ( \Throwable $e ) {
+			if ( str_contains( $e->getMessage(), 'consent_required' ) ) {
+				// This means the user needs to authorize the app.
+				$this->authorization['is_authorized']           = false;
+				$this->authorization['authorization_timestamp'] = 0;
+				update_option( 'wpcomsp_dwo_docusign_authorization', $this->authorization );
+				return false;
+			}
+			return new \WP_Error( 'error', 'Error confirming authorization: ' . $e->getMessage() );
+		}
+
+		return true;
 	}
 
 	/**
@@ -159,7 +191,7 @@ class DocuSign {
 	/**
 	 * Gets the expiration time of the access token.
 	 *
-	 * @return int The expiration timestamp of the access token.
+	 * @return integer The expiration timestamp of the access token.
 	 */
 	public function get_access_token_expiration(): int {
 		return $this->authorization['access_token_expiration'];
@@ -168,7 +200,7 @@ class DocuSign {
 	/**
 	 * Gets the access token. If the token is expired, it will attempt to refresh it.
 	 *
-	 * @return array|bool The access token or false if it couldn't be refreshed.
+	 * @return array|boolean The access token or false if it couldn't be refreshed.
 	 */
 	public function get_access_token() {
 		if ( ! $this->is_access_token_valid() ) {
@@ -181,7 +213,7 @@ class DocuSign {
 	/**
 	 * Retrieves a new access token from DocuSign.
 	 *
-	 * @return array|bool The access token or false if it couldn't be retrieved.
+	 * @return array|boolean The access token or false if it couldn't be retrieved.
 	 */
 	public function retrieve_access_token() {
 		try {
@@ -192,12 +224,18 @@ class DocuSign {
 				self::OAUTH_SCOPES
 			);
 		} catch ( \Throwable $e ) {
-			if ( str_contains( $e->getMessage(), 'consent_required' )) {
+			if ( str_contains( $e->getMessage(), 'consent_required' ) ) {
 				return false;
 			}
 			$this->woocommerce->logger->error( 'Error retrieving access token: ' . $e->getMessage() );
 		}
-// TODO: We need to save this information to the database.
+
+		if ( empty( $response ) ) {
+			return false;
+		}
+
+		$this->authorization['access_token']            = $response[0]['access_token'];
+		$this->authorization['access_token_expiration'] = time() + $response[0]['expires_in'];
 		return $response[0]['access_token'] ?? false;
 	}
 
@@ -207,7 +245,7 @@ class DocuSign {
 	 * @return string
 	 */
 	public function get_integration_key(): string {
-		return $this->settings->get_settings_data('integration_key');
+		return $this->settings->get_settings_data( 'integration_key' );
 	}
 
 	/**
@@ -216,7 +254,7 @@ class DocuSign {
 	 * @return string
 	 */
 	public function get_user_id(): string {
-		return $this->settings->get_settings_data('user_id');
+		return $this->settings->get_settings_data( 'user_id' );
 	}
 
 	/**
@@ -225,7 +263,7 @@ class DocuSign {
 	 * @return string
 	 */
 	public function get_rsa_key(): string {
-		return $this->settings->get_settings_data('rsa_key');
+		return $this->settings->get_settings_data( 'rsa_key' );
 	}
 
 
