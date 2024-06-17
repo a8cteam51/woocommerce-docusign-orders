@@ -146,9 +146,9 @@ class DocuSign {
 	/**
 	 * Confirms the authorization of the DocuSign API.
 	 *
-	 * @return boolean
+	 * @return boolean|WP_Error True if the authorization was confirmed, false if the user needs to authorize the app, or a WP_Error if there was an error.
 	 */
-	public function confirm_authorization(): bool|\WP_Error {
+	public function confirm_authorization() {
 		try {
 			$response = $this->api_client->requestJWTUserToken(
 				$this->get_integration_key(),
