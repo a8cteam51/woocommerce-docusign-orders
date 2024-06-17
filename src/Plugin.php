@@ -37,19 +37,11 @@ class Plugin {
 	 * Settings.
 	 *
 	 * @since 1.0.0
-	 * @version 1.0.0
+	 * @version
 	 *
 	 * @var Settings|null
 	 */
 	public ?Settings $settings = null;
-
-	/**
-	 * Status page.
-	 *
-	 * @since 1.0.0
-	 * @version 1.0.0
-	 */
-	public ?Status $status = null;
 
 	// endregion
 
@@ -162,9 +154,6 @@ class Plugin {
 
 		$this->settings = new Settings();
 		$this->settings->initialize();
-
-		$this->status = new Status();
-		$this->status->initialize();
 
 		$this->docusign = new Embedded_DocuSign();
 
