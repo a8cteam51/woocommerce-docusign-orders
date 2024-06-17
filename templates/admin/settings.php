@@ -2,7 +2,7 @@
 /**
  * Settings page template.
  *
- * @package WPcomSpecialProjects\Unused_Media_Remover
+ * @package WPcomSpecialProjects\DocuSignWooCommerceOrders
  */
 
 use WPCOMSpecialProjects\DocuSignWooCommerceOrders\Logger;

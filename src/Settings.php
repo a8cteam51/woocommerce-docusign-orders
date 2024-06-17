@@ -59,7 +59,7 @@ class Settings {
 	public function add_settings_page(): void {
 		add_options_page(
 			__( 'DocuSign WooCommerce Orders Settings', 'wpcomsp-woocommerce-docusign-orders' ),
-			__( 'DocuSign for Woo', 'wpcomsp-woocommerce-docusign-orders' ),
+			__( 'DocuSign Settings', 'wpcomsp-woocommerce-docusign-orders' ),
 			'manage_options',
 			'wpcomsp_woocommerce_docusign_settings',
 			array( $this, 'display_settings' )
