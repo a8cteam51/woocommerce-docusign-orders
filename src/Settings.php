@@ -57,9 +57,10 @@ class Settings {
 	 * @return void
 	 */
 	public function add_settings_page(): void {
-		add_options_page(
+		add_submenu_page(
+			'buya12stock',
 			__( 'DocuSign WooCommerce Orders Settings', 'wpcomsp-woocommerce-docusign-orders' ),
-			__( 'DocuSign for Woo', 'wpcomsp-woocommerce-docusign-orders' ),
+			__( 'DocuSign', 'wpcomsp-woocommerce-docusign-orders' ),
 			'manage_options',
 			'wpcomsp_woocommerce_docusign_settings',
 			array( $this, 'display_settings' )
@@ -344,12 +345,12 @@ class Settings {
 	private function get_settings_fields(): array {
 		$fields = array(
 			array(
-				'label'   => __( 'Environment', 'wpcomsp-woocommerce-docusign-orders' ),
-				'type'    => 'select',
-				'setting' => 'environment',
-				'id'      => $this->slug . '-settings[environment]',
-				'name'    => $this->slug . '-settings[environment]',
-				'options' => $this->get_environment_options(),
+				'label'       => __( 'Environment', 'wpcomsp-woocommerce-docusign-orders' ),
+				'type'        => 'select',
+				'setting'     => 'environment',
+				'id'          => $this->slug . '-settings[environment]',
+				'name'        => $this->slug . '-settings[environment]',
+				'options'     => $this->get_environment_options(),
 				'description' => __( 'The DocuSign environment to connect to.', 'wpcomsp-woocommerce-docusign-orders' ),
 			),
 			array(
