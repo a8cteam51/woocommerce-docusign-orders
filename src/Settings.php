@@ -57,9 +57,10 @@ class Settings {
 	 * @return void
 	 */
 	public function add_settings_page(): void {
-		add_options_page(
+		add_submenu_page(
+			'buya12stock',
 			__( 'DocuSign WooCommerce Orders Settings', 'wpcomsp-woocommerce-docusign-orders' ),
-			__( 'DocuSign for Woo', 'wpcomsp-woocommerce-docusign-orders' ),
+			__( 'DocuSign', 'wpcomsp-woocommerce-docusign-orders' ),
 			'manage_options',
 			'wpcomsp_woocommerce_docusign_settings',
 			array( $this, 'display_settings' )
